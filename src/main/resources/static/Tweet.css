@@ -1,0 +1,71 @@
+
+
+#acountimage{
+  float:left;
+  width:100px;
+  height:100px;
+}
+
+#AccountName{
+    width:300px;
+}
+
+#followimage{
+  float:right;
+  width:100px;
+  height:100px;
+}
+
+.TweetContents{
+    clear:both;
+     width:650px; 
+     background-color:#ffffff;
+     margin:0 auto;
+}
+
+#Tweetimg{
+   
+     width:650px; 
+     height:200px;
+      margin:0 auto;
+}
+
+
+#RT{
+     clear:both;
+    float:left;
+    padding-left: 30px;
+    border : 1px solid #000000;
+}
+
+#Good{
+    float:left;
+     padding-left: 30px;
+     border : 1px solid #000000;
+}
+#Day{
+    clear:both;
+    float:left;
+     padding-left: 30px;
+}
+.Rep{
+     clear:both;
+     width:650px; 
+     border : 1px solid #000000;
+     margin:0 auto;
+
+}
+
+.button{
+    float:left;
+    padding-right: 10px;
+}
+.text{
+	float:left;
+	padding-right: 30px;
+}
+
+
+
+
+

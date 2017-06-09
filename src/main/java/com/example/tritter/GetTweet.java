@@ -10,6 +10,7 @@ public class GetTweet {
             User user = twitter.verifyCredentials();
             List<Status> statuses = twitter.getHomeTimeline();
             System.out.println("Showing @" + user.getScreenName() + "'s home timeline.");
+            System.out.println("プロフィール画像のURL:"+user.getMiniProfileImageURL());
             for (Status status : statuses) {
                 System.out.println("@" + status.getUser().getScreenName() + " - 「" + status.getText()+"」       ふぁぼ"+status.getFavoriteCount()+"     りつい"+status.getRetweetCount());
             }

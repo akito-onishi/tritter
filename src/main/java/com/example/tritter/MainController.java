@@ -1,25 +1,32 @@
 package com.example.tritter;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
+import twitter4j.*;
 @Controller
 public class MainController {
-    @Value("${app.name}")
-    private String appname;
+//    @Value("${app.name}")
+//    private String appname;
+//    
+//    @Autowired
+//    private JdbcTemplate jdbc;
+//    
+//    @GetMapping("/h2")
+//    public String h2(){
+//        System.out.println(jdbc.queryForList("SELECT * FROM person"));
+//        return "sample";
+//    }
     
-    @Autowired
-    private JdbcTemplate jdbc;
     
-    @GetMapping("/h2")
-    public String h2(){
-        System.out.println(jdbc.queryForList("SELECT * FROM person"));
-        return "sample";
-    }
+    Twitter twitter = new TwitterFactory().getInstance();
+    User user;
+    Status status;
     
     int fav_num = 0;// ふぁぼの変数
     int rt_num = 0;// りついの変数
@@ -27,8 +34,11 @@ public class MainController {
     int default_rt = 1000;// りつい初期値
     boolean fav_buttonbool=false;// ふぁぼボタンを押したかどうか
     boolean rt_buttonbool=false;//りついボタンを押したかどうか
-    String accountName = "ほげ";
-    String tweetContents = "ふがああああああああああああああ";
+    String accountName;
+    String tweetContents;
+    String screenName;
+    String accountimgURL;
+    
     
     @GetMapping("/sample") // 最初の状態
     public String sample(Model model) {
@@ -59,7 +69,7 @@ public class MainController {
     }
 
     @GetMapping("/fav_button")
-    public String fav_button(String favpush, Model model) {// ふぁぼボタンを押したときの処理
+    public String fav_button(Model model) {// ふぁぼボタンを押したときの処理
         fav_num+=1;
         model.addAttribute("fav", fav_num);// ふぁぼ＋１
         model.addAttribute("rt", rt_num);// りついはそのまま
@@ -73,7 +83,7 @@ public class MainController {
     }
 
     @GetMapping("/rt_button")
-    public String rt_button(String rtpush, Model model) {// ふぁぼボタンを押したときの処理
+    public String rt_button(Model model) {// ふぁぼボタンを押したときの処理
         rt_num+=1;
         model.addAttribute("fav", fav_num);// ふぁぼはそのまま
         model.addAttribute("rt", rt_num);// りつい+1
@@ -94,12 +104,57 @@ public class MainController {
         return "sample";
         
     }
+    
     @GetMapping("/setTweet")
-   public String setTweet(Model model,Object accountimg,String accountname,String tweetcontents,Object tltweetimg){
-        model.addAttribute("accountname",accountName);
+   public String setTweet(Model model){//
+       
+       model.addAttribute("accountname",accountName);
        model.addAttribute("tweetcontents",tweetContents);
+       model.addAttribute("screenname","@"+screenName);
+       getAccountName(model);
+       getScreenName(model);
+       
       
        return "sample";
    }
-
+    
+   public String getAccountName(Model model){//アカウント名取得メソッド
+       try {
+           user = twitter.verifyCredentials();
+           accountName = user.getName();
+           
+       } catch (TwitterException te) {
+           te.printStackTrace();
+           System.out.println("Failed to get timeline: " + te.getMessage());
+           System.exit(-1);
+       }
+       return accountName;
+   }
+   
+   public String getScreenName(Model model){//スクリーンネーム取得メソッド
+       try {
+           user = twitter.verifyCredentials();
+           screenName = user.getScreenName();
+           
+       } catch (TwitterException te) {
+           te.printStackTrace();
+           System.out.println("Failed to get timeline: " + te.getMessage());
+           System.exit(-1);
+       }
+       return screenName;
+   }
+   
+   public String getAccountImg(Model model){//アカウント画像取得メソッド
+       try {
+           user = twitter.verifyCredentials();
+           accountimgURL = user.getProfileImageURL();
+           
+       } catch (TwitterException te) {
+           te.printStackTrace();
+           System.out.println("Failed to get timeline: " + te.getMessage());
+           System.exit(-1);
+       }
+       return accountimgURL;
+   }
+  
 }

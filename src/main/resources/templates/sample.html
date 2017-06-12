@@ -34,20 +34,20 @@
 
 			<h1>TimeLine</h1>
 			<p>タイムライン情報を表示</p>
-
+            <form method="get" th:action="@{/setTweet}">
 			<div id="TLtweet">
 				<!--タイムラインの一つのツイート-->
 				<a href="">
 					<div id="TLacountimage">
 						<!--TLアイコン表示-->
-
 						<img src="画像.png" alt="画像" id="TLacountimage" />
+						
 					</div>
 
 
 					<div id="TLAccountName">
 						<p>
-							<font size="3">アカウント名</font> <font size="2">@account</font>
+							<font size="3"><span th:text="${accountname}"></span></font> <font size="2"><span th:text="${screenname}"></span></font>
 						</p>
 
 					</div>
@@ -55,13 +55,7 @@
 
 					<div class="TweetContents">
 						<!--TLツイート内容表示-->
-						<font size="2"><p>ツイート内容ツイート内容ツイート内容ツイート内容
-                            ツイート内容ツイート内容ツイート内容ツイート内容 ツイート内容ツイート内容ツイート内容ツイート内容
-                            ツイート内容ツイート内容ツイート内容ツイート内容 ツイート内容ツイート内容ツイート内容ツイート内容
-                            ツイート内容ツイート内容ツイート内容ツイート内容 ツイート内容ツイート内容ツイート内容ツイート内容
-                            ツイート内容ツイート内容ツイート内容ツイート内容 ツイート内容ツイート内容ツイート内容ツイート内容
-                            ツイート内容ツイート内容ツイート内容ツイート内容 ツイート内容ツイート内容ツイート内容ツイート内容
-                            ツイート内容ツイート内容ツイート内容ツイート内容</p></font>
+						<font size="2"><p><span th:text="${tweetcontents}"></span></p></font>
 					</div>
 
 					<div class="TLTweetimg">
@@ -81,6 +75,7 @@
 					</div>
 				</a>
 			</div>
+			</form>
 
 
 			<div id="TLtweet">

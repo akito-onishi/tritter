@@ -1,5 +1,6 @@
 package com.example.tritter;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,8 @@ public class MainController {
         model.addAttribute("rtpush", "🔁");// ふぁぼ押す前の初期値
         fav_num = default_fav;// 変数に代入
         rt_num = default_rt;// 変数に代入
+        
+        model.addAttribute("tweets", Arrays.asList("tweet1", "tweet2", "tweet3"));
 
         return "sample";
     }
@@ -114,7 +117,8 @@ public class MainController {
            accountimgURL = user.getProfileImageURL();//画像のURLを代入
            List<Status> statuses = twitter.getHomeTimeline();//TLのリスト
            tweetContents = statuses.get(0).getText();//最新(Listの0ｂ番目)のツイート内容
-           
+           default_fav = statuses.get(0).getFavoriteCount();//ふぁぼ数代入
+           default_rt = statuses.get(0).getRetweetCount();//りつい数代入
        } catch (TwitterException te) {
            te.printStackTrace();
            System.out.println("Failed to get timeline: " + te.getMessage());
@@ -123,6 +127,9 @@ public class MainController {
        model.addAttribute("accountname",accountName);
        model.addAttribute("tweetcontents",tweetContents);
        model.addAttribute("screenname","@"+screenName);
+       model.addAttribute("fav",default_fav);
+       model.addAttribute("rt",default_rt);
+       model.addAttribute("accountimgURL",accountimgURL);
        return "sample";
    }
   

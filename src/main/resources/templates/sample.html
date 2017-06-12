@@ -33,6 +33,11 @@
 			<!--タイムラインエリア-->
 
 			<h1>TimeLine</h1>
+			<!--th:each-->
+			<div th:each="tweet : ${tweets}">
+			 <span th:text="${tweet}"></span>
+			</div>
+			
 			<p>タイムライン情報を表示</p>
             <form method="get" th:action="@{/setTweet}">
 			<div id="TLtweet">
@@ -40,7 +45,7 @@
 				<a href="">
 					<div id="TLacountimage">
 						<!--TLアイコン表示-->
-						<img src="画像.png" alt="画像" id="TLacountimage" />
+						<img th:src="${accountimgURL}" alt="画像" id="TLacountimage" />
 						
 					</div>
 
@@ -68,9 +73,9 @@
 						<p>
 							<button type="tlrepbutton">⤴</button>　　　　　　
 							<button type="tlrtbutton">🔁</button>
-							350　　　　　　          
+							<span th:text="${rt}"></span>　　　　　　          
 							<button type="tlfavbutton">♡</button>
-							350        
+							<span th:text="${fav}"></span>        
 						</p>
 					</div>
 				</a>

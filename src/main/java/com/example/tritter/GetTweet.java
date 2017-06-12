@@ -11,7 +11,7 @@ public class GetTweet {
             
             List<Status> statuses = twitter.getHomeTimeline();
             System.out.println("Showing @" + user.getScreenName() + "'s home timeline.");
-            System.out.println("プロフィール画像のURL:"+user.getMiniProfileImageURL());
+            System.out.println("プロフィール画像のURL:"+user.getProfileImageURL());
           //ついーとしてみる
            // twitter.updateStatus("st");
             System.out.println("一つ目のツイートを表示: "+statuses.get(0).getText());

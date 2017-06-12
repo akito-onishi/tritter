@@ -24,10 +24,6 @@ public class MainController {
 //    }
     
     
-    Twitter twitter = new TwitterFactory().getInstance();
-    User user;
-    Status status;
-    
     int fav_num = 0;// ふぁぼの変数
     int rt_num = 0;// りついの変数
     int default_fav = 1000;// ふぁぼ初期値
@@ -38,6 +34,7 @@ public class MainController {
     String tweetContents;
     String screenName;
     String accountimgURL;
+    
     
     
     @GetMapping("/sample") // 最初の状態
@@ -105,56 +102,28 @@ public class MainController {
         
     }
     
-    @GetMapping("/setTweet")
-   public String setTweet(Model model){//
-       
+
+   @GetMapping("/setTweet")
+   public String getTweet(Model model){//ツイート取得メソッド
+       try {
+           Twitter twitter = new TwitterFactory().getInstance();
+           User user = twitter.verifyCredentials();
+           
+           accountName = user.getName();//アカウント名を代入
+           screenName = user.getScreenName();//スクリーンネームを代入
+           accountimgURL = user.getProfileImageURL();//画像のURLを代入
+           List<Status> statuses = twitter.getHomeTimeline();//TLのリスト
+           tweetContents = statuses.get(0).getText();//最新(Listの0ｂ番目)のツイート内容
+           
+       } catch (TwitterException te) {
+           te.printStackTrace();
+           System.out.println("Failed to get timeline: " + te.getMessage());
+           System.exit(-1);
+       }
        model.addAttribute("accountname",accountName);
        model.addAttribute("tweetcontents",tweetContents);
        model.addAttribute("screenname","@"+screenName);
-       getAccountName(model);
-       getScreenName(model);
-       
-      
        return "sample";
-   }
-    
-   public String getAccountName(Model model){//アカウント名取得メソッド
-       try {
-           user = twitter.verifyCredentials();
-           accountName = user.getName();
-           
-       } catch (TwitterException te) {
-           te.printStackTrace();
-           System.out.println("Failed to get timeline: " + te.getMessage());
-           System.exit(-1);
-       }
-       return accountName;
-   }
-   
-   public String getScreenName(Model model){//スクリーンネーム取得メソッド
-       try {
-           user = twitter.verifyCredentials();
-           screenName = user.getScreenName();
-           
-       } catch (TwitterException te) {
-           te.printStackTrace();
-           System.out.println("Failed to get timeline: " + te.getMessage());
-           System.exit(-1);
-       }
-       return screenName;
-   }
-   
-   public String getAccountImg(Model model){//アカウント画像取得メソッド
-       try {
-           user = twitter.verifyCredentials();
-           accountimgURL = user.getProfileImageURL();
-           
-       } catch (TwitterException te) {
-           te.printStackTrace();
-           System.out.println("Failed to get timeline: " + te.getMessage());
-           System.exit(-1);
-       }
-       return accountimgURL;
    }
   
 }

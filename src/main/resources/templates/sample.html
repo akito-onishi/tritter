@@ -65,7 +65,7 @@
 
 					<div class="TLTweetimg">
 						<!--ツイート写真があれば表示-->
-						<img th:src="${tweetimgURL}" alt="画像" class="TLTweetimg" />
+						<img th:src="${tweetimgURL}" alt="" class="TLTweetimg" />
 					</div>
 
 					<div class="Rep">
@@ -191,8 +191,8 @@
 				<div class="button">
 				<form method="get" th:action="@{/rt_button}">
 					<!-- りついぼたん押したときの処理 -->
-					<button type="submit" name="rt_button">
-						<span th:text="${rtpush}"></span>
+					　　　　<button type="submit" name="rt_button">
+					<span th:text="${rtpush}"></span>
 					</button >
 				
 				</form>
@@ -205,7 +205,7 @@
 				<div class="button">
 				<form method="get" th:action="@{/fav_button}">
 					<!-- ふぁぼぼたん押したときの処理 -->
-					<button type="submit" name="fav_button">
+					　　　　<button type="submit" name="fav_button">
 						<span th:text="${favpush}"></span>
 					</button>
 					

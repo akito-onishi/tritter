@@ -38,7 +38,7 @@ public class MainController {
     String screenName;
     String accountimgURL;
     String tweetimgURL;
-    int tweet = 0;
+    int tweet = 3;//test用仮引数
     
     
     /**
@@ -138,11 +138,15 @@ public class MainController {
            tweetContents = statuses.get(tweet).getText();//最新(Listの0ｂ番目)のツイート内容
            default_fav = statuses.get(tweet).getFavoriteCount();//ふぁぼ数代入
            default_rt = statuses.get(tweet).getRetweetCount();//りつい数代入
-           MediaEntity[] mediaEntitys = statuses.get(tweet).getMediaEntities();
-           MediaEntity mediaentity = mediaEntitys[0];
            
+           MediaEntity[] mediaEntitys = statuses.get(tweet).getMediaEntities();//ツイートメディアのリスト
+           if(mediaEntitys.length ==0){//リストが空だったら
+               tweetimgURL = "";
+           }else{//リストに値が入っていたら
+           MediaEntity mediaentity = mediaEntitys[0];//リストの1つ目の要素を与える
            tweetimgURL = mediaentity.getMediaURL();//ツイート画像URLを代入
-
+           }
+           
        } catch (TwitterException te) {
            te.printStackTrace();
            System.out.println("Failed to get timeline: " + te.getMessage());

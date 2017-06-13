@@ -1,5 +1,6 @@
 package com.example.tritter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,6 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
 import twitter4j.*;
 @Controller
 public class MainController {
@@ -24,7 +27,6 @@ public class MainController {
 //        return "sample";
 //    }
     
-    
     int fav_num = 0;// ふぁぼの変数
     int rt_num = 0;// りついの変数
     int default_fav = 1000;// ふぁぼ初期値
@@ -35,9 +37,16 @@ public class MainController {
     String tweetContents;
     String screenName;
     String accountimgURL;
+    String tweetimgURL;
+    int tweet = 0;
     
     
-    
+    /**
+     * tritterの初期ページ
+     * 
+     * @param model 
+     * @return 
+     */
     @GetMapping("/sample") // 最初の状態
     public String sample(Model model) {
         
@@ -52,7 +61,13 @@ public class MainController {
 
         return "sample";
     }
-
+    /**
+     * 
+     * @param rt
+     * @param fav
+     * @param model
+     * @return
+     */
     @GetMapping("/rt_fav")
     public String rt_fav(int rt, int fav, Model model) {// りついふぁぼ変更処理
         fav_num = fav;// 変数に代入
@@ -67,7 +82,11 @@ public class MainController {
         
         return "sample";
     }
-
+    /**
+     * 
+     * @param model
+     * @return
+     */
     @GetMapping("/fav_button")
     public String fav_button(Model model) {// ふぁぼボタンを押したときの処理
         fav_num+=1;
@@ -114,11 +133,16 @@ public class MainController {
            
            accountName = user.getName();//アカウント名を代入
            screenName = user.getScreenName();//スクリーンネームを代入
-           accountimgURL = user.getProfileImageURL();//画像のURLを代入
+           accountimgURL = user.getProfileImageURL();//アカウント画像のURLを代入
            List<Status> statuses = twitter.getHomeTimeline();//TLのリスト
-           tweetContents = statuses.get(0).getText();//最新(Listの0ｂ番目)のツイート内容
-           default_fav = statuses.get(0).getFavoriteCount();//ふぁぼ数代入
-           default_rt = statuses.get(0).getRetweetCount();//りつい数代入
+           tweetContents = statuses.get(tweet).getText();//最新(Listの0ｂ番目)のツイート内容
+           default_fav = statuses.get(tweet).getFavoriteCount();//ふぁぼ数代入
+           default_rt = statuses.get(tweet).getRetweetCount();//りつい数代入
+           MediaEntity[] mediaEntitys = statuses.get(tweet).getMediaEntities();
+           MediaEntity mediaentity = mediaEntitys[0];
+           
+           tweetimgURL = mediaentity.getMediaURL();//ツイート画像URLを代入
+
        } catch (TwitterException te) {
            te.printStackTrace();
            System.out.println("Failed to get timeline: " + te.getMessage());
@@ -130,7 +154,11 @@ public class MainController {
        model.addAttribute("fav",default_fav);
        model.addAttribute("rt",default_rt);
        model.addAttribute("accountimgURL",accountimgURL);
+       model.addAttribute("tweetimgURL",tweetimgURL);
        return "sample";
    }
+   
+   //@PostMapping("/")
+   
   
 }

@@ -33,7 +33,7 @@
 			<!--タイムラインエリア-->
 
 			<h1>TimeLine</h1>
-			<!--th:each-->
+            <!--th:each-->
 			<div th:each="tweet : ${tweets}">
 			 <span th:text="${tweet}"></span>
 			</div>
@@ -65,7 +65,7 @@
 
 					<div class="TLTweetimg">
 						<!--ツイート写真があれば表示-->
-						<img src="pic.png" alt="画像" class="TLTweetimg" />
+						<img th:src="${tweetimgURL}" alt="画像" class="TLTweetimg" />
 					</div>
 
 					<div class="Rep">

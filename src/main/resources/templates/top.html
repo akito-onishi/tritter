@@ -33,26 +33,32 @@
 			<!--タイムラインエリア-->
 
 			<h1>TimeLine</h1>
-            <!--th:each-->
+			<!--th:each-->
 			<div th:each="tweet : ${tweets}">
-			 <span th:text="${tweet}"></span>
+				<span th:text="${tweet}"></span>
 			</div>
-			
-			<p>タイムライン情報を表示</p>
-            <form method="get" th:action="@{/setTweet}">
+
+			<p>タイムライン情報を表示
+			<form method="post" th:action="@{/setTweet}">
+				<button type="submit" name="TLread_button">ツイート読み込み</button>
+			</form>
+			</p>
+
+
 			<div id="TLtweet">
 				<!--タイムラインの一つのツイート-->
 				<a href="">
 					<div id="TLacountimage">
 						<!--TLアイコン表示-->
 						<img th:src="${accountimgURL}" alt="画像" id="TLacountimage" />
-						
+
 					</div>
 
 
 					<div id="TLAccountName">
 						<p>
-							<font size="3"><span th:text="${accountname}"></span></font> <font size="2"><span th:text="${screenname}"></span></font>
+							<font size="3"><span th:text="${accountname}"></span></font> <font
+								size="2"><span th:text="${screenname}"></span></font>
 						</p>
 
 					</div>
@@ -60,7 +66,9 @@
 
 					<div class="TweetContents">
 						<!--TLツイート内容表示-->
-						<font size="2"><p><span th:text="${tweetcontents}"></span></p></font>
+						<font size="2"><p>
+								<span th:text="${tweetcontents}"></span>
+							</p></font>
 					</div>
 
 					<div class="TLTweetimg">
@@ -70,17 +78,39 @@
 
 					<div class="Rep">
 						<!--TLリプライ内容表示-->
-						<p>
-							<button type="tlrepbutton">⤴</button>　　　　　　
-							<button type="tlrtbutton">🔁</button>
-							<span th:text="${rt}"></span>　　　　　　          
-							<button type="tlfavbutton">♡</button>
-							<span th:text="${fav}"></span>        
-						</p>
+						<div class="button">
+							<button type="tlrepbutton">⤴</button>
+						</div>
+
+						<div class="button">
+							<form method="post" th:action="@{/rt_button}">
+								<!-- りついぼたん押したときの処理 -->
+								　　　　　<button type="submit" name="rt_button">
+									<span th:text="${rtpush}"></span>
+								</button>
+							</form>
+						</div>
+						<div class="text">
+						<span th:text="${rt}"></span>
+						</div>
+
+						<div class="button">
+							<form method="post" th:action="@{/fav_button}">
+								<!-- ふぁぼぼたん押したときの処理 -->
+								　　　　　<button type="submit" name="tl_fav_button">
+									<span th:text="${favpush}"></span>
+								</button>
+							</form>
+						</div>
+						
+						<span th:text="${fav}"></span>
+						
+						
+
 					</div>
 				</a>
 			</div>
-			</form>
+
 
 
 			<div id="TLtweet">
@@ -118,9 +148,9 @@
 				<div class="Rep">
 					<!--TLリプライ内容表示-->
 					<p>
-						<button type="tlrepbutton">⤴</button>　　　　　
+						<button type="tlrepbutton">⤴</button>
 						<button type="tlrtbutton">🔁</button>
-						350　　　　　
+						350
 						<button type="tlfavbutton">♡</button>
 						350
 					</p>
@@ -185,35 +215,35 @@
 
 			<div class="Rep">
 
-                <div class="button">
-				<button type="button" name="rep_button">⤴</button>
+				<div class="button">
+					<button type="button" name="rep_button">⤴</button>
 				</div>
 				<div class="button">
-				<form method="post" th:action="@{/rt_button}">
-					<!-- りついぼたん押したときの処理 -->
-					　　　　<button type="submit" name="rt_button">
-					<span th:text="${rtpush}"></span>
-					</button >
-				
-				</form>
+					<form method="post" th:action="@{/rt_button}">
+						<!-- りついぼたん押したときの処理 -->
+						　　　　　<button type="submit" name="rt_button">
+							<span th:text="${rtpush}"></span>
+						</button>
+
+					</form>
 				</div>
 				<div class="text">
-				<span th:text="${rt}"></span>
+					<span th:text="${rt}"></span>
 				</div>
-				
-				
+
+
 				<div class="button">
-				<form method="post" th:action="@{/fav_button}">
-					<!-- ふぁぼぼたん押したときの処理 -->
-					　　　　<button type="submit" name="fav_button">
-						<span th:text="${favpush}"></span>
-					</button>
-					
-				</form>
+					<form method="post" th:action="@{/fav_button}">
+						<!-- ふぁぼぼたん押したときの処理 -->
+						　　　　　<button type="submit" name="fav_button">
+							<span th:text="${favpush}"></span>
+						</button>
+
+					</form>
 				</div>
-				<div class="text">
-				<span th:text="${fav}"></span>
-                </div>
+				
+					<span th:text="${fav}"></span>
+				
 			</div>
 
 		</div>
@@ -222,18 +252,19 @@
 			<h2>ButtonArea</h2>
 			<p>ボタンを配置</p>
 			<p>
-			<form method="get" th:action="@{/rt_fav}">
-				
-					<button type="enjo">炎上</button>
-					RT数変更<input type="number" name="rt" max="9999999" th:value="${rt}" />
-					ふぁぼ数変更<input type="number" name="fav" max="9999999" th:value="${fav}" />
-					
-					</form>
-					<form method="post" th:action="@{/clear}">
-                    <button type="submit" >クリア</button>
-                    </form>
-				</p>
-			
+			<form method="post" th:action="@{/rt_fav}">
+
+				<button type="enjo">炎上</button>
+				RT数変更<input type="number" name="rt" max="9999999" min="0"
+					th:value="${rt}" /> ふぁぼ数変更<input type="number" name="fav"
+					max="9999999" min="0" th:value="${fav}" />
+
+			</form>
+			<form method="post" th:action="@{/clear}">
+				<button type="submit">クリア</button>
+			</form>
+			</p>
+
 		</div>
 
 	</div>

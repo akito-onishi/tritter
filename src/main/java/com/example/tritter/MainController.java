@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import twitter4j.*;
 @Controller
@@ -38,7 +39,7 @@ public class MainController {
     String screenName;
     String accountimgURL;
     String tweetimgURL;
-    int tweet = 3;//test用仮引数
+    int tweet = 0;//test用仮引数
     
     
     /**
@@ -62,6 +63,7 @@ public class MainController {
         return "sample";
     }
     /**
+     * 
      * 
      * @param rt
      * @param fav
@@ -115,13 +117,21 @@ public class MainController {
         return "sample";
     }
     
-    @GetMapping("/clear")
-    public String clear(Model model){//クリアボタン
-        sample(model);
+//    @GetMapping("/clear")
+//    public String clear(Model model){//クリアボタン
+//        sample(model);
+//        fav_buttonbool=false;//初期化
+//        rt_buttonbool=false;//初期化
+//        return "sample";
+//        
+//    }
+    
+    @PostMapping("/clear")
+    public String Clear(RedirectAttributes attr){
+        sample(attr);
         fav_buttonbool=false;//初期化
         rt_buttonbool=false;//初期化
-        return "sample";
-        
+        return "redirect:/sample";
     }
     
 

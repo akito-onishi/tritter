@@ -217,7 +217,6 @@
 			</div>
 
 		</div>
-
 		<div class="ButtonArea">
 			<!--ボタン配置エリア-->
 			<h2>ButtonArea</h2>
@@ -230,7 +229,7 @@
 					ふぁぼ数変更<input type="number" name="fav" max="9999999" th:value="${fav}" />
 					
 					</form>
-					<form method="get" th:action="@{/clear}">
+					<form method="post" th:action="@{/clear}">
                     <button type="submit" >クリア</button>
                     </form>
 				</p>

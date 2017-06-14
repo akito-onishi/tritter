@@ -16,20 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import twitter4j.*;
 @Controller
 public class MainController {
-//    @Value("${app.name}")
-//    private String appname;
-//    
-//    @Autowired
-//    private JdbcTemplate jdbc;
-//    
-//    @GetMapping("/h2")
-//    public String h2(){
-//        System.out.println(jdbc.queryForList("SELECT * FROM person"));
-//        return "top";
-//    }
-    
-    int fav_num = 0;// ふぁぼの変数
-    int rt_num = 0;// りついの変数
+
     int default_fav = 0;// ふぁぼ初期値
     int default_rt = 0;// りつい初期値
     boolean fav_buttonbool=false;// ふぁぼボタンを押したかどうか
@@ -56,7 +43,6 @@ public class MainController {
      */
     @GetMapping("/top") // 最初の状態
     public String top(Model model) {
-        
         model.addAttribute("fav", default_fav);
         model.addAttribute("rt", default_rt);
         model.addAttribute("favpush", default_fav_icon);
@@ -66,9 +52,7 @@ public class MainController {
         model.addAttribute("screenname","@"+screenName);
         model.addAttribute("accountimgURL",accountimgURL);
         model.addAttribute("tweetimgURL",tweetimgURL);
-        
-        //model.addAttribute("tweets", Arrays.asList("tweet1", "tweet2", "tweet3"));
-
+        model.addAttribute("tweets", Arrays.asList("tweet1", "tweet2","tweet3"));
         return "top";
     }
 
@@ -144,6 +128,7 @@ public class MainController {
         default_fav = 0;// ふぁぼ初期化
         default_rt = 0;// りつい初期化
         default_fav_icon = "♡";
+        default_rt_icon = "🔁";
         fav_buttonbool=false;//初期化
         rt_buttonbool=false;//初期化
         return "redirect:/top";
@@ -186,6 +171,7 @@ public class MainController {
            System.out.println("Failed to get timeline: " + te.getMessage());
            System.exit(-1);
        }
+       
        
        return "redirect:/top";
    }

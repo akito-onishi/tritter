@@ -25,7 +25,7 @@ public class MainController {
 //    @GetMapping("/h2")
 //    public String h2(){
 //        System.out.println(jdbc.queryForList("SELECT * FROM person"));
-//        return "sample";
+//        return "top";
 //    }
     
     int fav_num = 0;// ふぁぼの変数
@@ -48,8 +48,8 @@ public class MainController {
      * @param model 
      * @return 
      */
-    @GetMapping("/sample") // 最初の状態
-    public String sample(Model model) {
+    @GetMapping("/top") // 最初の状態
+    public String top(Model model) {
         
         model.addAttribute("fav", default_fav);
         model.addAttribute("rt", default_rt);
@@ -58,9 +58,9 @@ public class MainController {
         fav_num = default_fav;// 変数に代入
         rt_num = default_rt;// 変数に代入
         
-        model.addAttribute("tweets", Arrays.asList("tweet1", "tweet2", "tweet3"));
+        //model.addAttribute("tweets", Arrays.asList("tweet1", "tweet2", "tweet3"));
 
-        return "sample";
+        return "top";
     }
     /**
      * 
@@ -82,7 +82,7 @@ public class MainController {
         fav_buttonbool=false;//初期化
         rt_buttonbool=false;//初期化
         
-        return "sample";
+        return "top";
     }
     /**
      * 
@@ -100,7 +100,7 @@ public class MainController {
         if(rt_buttonbool){//りついが押されてたら表示を変更する
             model.addAttribute("rtpush", "🔃");// 表示変更
         }
-        return "sample";
+        return "top";
     }
 
     @GetMapping("/rt_button")
@@ -114,24 +114,15 @@ public class MainController {
         if(fav_buttonbool){//ふぁぼが押されてたら表示を変更する
             model.addAttribute("favpush", "♥");// 表示変更
         }
-        return "sample";
+        return "top";
     }
-    
-//    @GetMapping("/clear")
-//    public String clear(Model model){//クリアボタン
-//        sample(model);
-//        fav_buttonbool=false;//初期化
-//        rt_buttonbool=false;//初期化
-//        return "sample";
-//        
-//    }
     
     @PostMapping("/clear")
     public String Clear(RedirectAttributes attr){
-        sample(attr);
+        top(attr);
         fav_buttonbool=false;//初期化
         rt_buttonbool=false;//初期化
-        return "redirect:/sample";
+        return "redirect:/top";
     }
     
 
@@ -169,7 +160,7 @@ public class MainController {
        model.addAttribute("rt",default_rt);
        model.addAttribute("accountimgURL",accountimgURL);
        model.addAttribute("tweetimgURL",tweetimgURL);
-       return "sample";
+       return "top";
    }
    
    //@PostMapping("/")

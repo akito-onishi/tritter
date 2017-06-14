@@ -30,10 +30,14 @@ public class MainController {
     
     int fav_num = 0;// ふぁぼの変数
     int rt_num = 0;// りついの変数
-    int default_fav = 1000;// ふぁぼ初期値
-    int default_rt = 1000;// りつい初期値
+    int default_fav = 0;// ふぁぼ初期値
+    int default_rt = 0;// りつい初期値
     boolean fav_buttonbool=false;// ふぁぼボタンを押したかどうか
     boolean rt_buttonbool=false;//りついボタンを押したかどうか
+    String default_fav_icon = "♡";
+    String change_fav_icon = "❤";
+    String default_rt_icon = "🔁";
+    String change_rt_icon = "🔃";
     String accountName;
     String tweetContents;
     String screenName;
@@ -53,15 +57,14 @@ public class MainController {
         
         model.addAttribute("fav", default_fav);
         model.addAttribute("rt", default_rt);
-        model.addAttribute("favpush", "♡");// ふぁぼ押す前の初期値
-        model.addAttribute("rtpush", "🔁");// ふぁぼ押す前の初期値
-        fav_num = default_fav;// 変数に代入
-        rt_num = default_rt;// 変数に代入
+        model.addAttribute("favpush", default_fav_icon);// ふぁぼ押す前の初期値
+        model.addAttribute("rtpush", default_rt_icon);// ふぁぼ押す前の初期値
         
         //model.addAttribute("tweets", Arrays.asList("tweet1", "tweet2", "tweet3"));
 
         return "top";
     }
+
     /**
      * 
      * 
@@ -84,37 +87,33 @@ public class MainController {
         
         return "top";
     }
+
     /**
      * 
      * @param model
      * @return
      */
-    @GetMapping("/fav_button")
-    public String fav_button(Model model) {// ふぁぼボタンを押したときの処理
-        fav_num+=1;
-        model.addAttribute("fav", fav_num);// ふぁぼ＋１
-        model.addAttribute("rt", rt_num);// りついはそのまま
-        model.addAttribute("favpush", "♥");// 表示変更
-        model.addAttribute("rtpush", "🔁");// ふぁぼ押す前の初期値
+
+    @PostMapping("/fav_button")
+    public String fav_button(RedirectAttributes attr) {// ふぁぼボタンを押したときの処理
+        default_fav+=1;// ふぁぼ＋１
+        default_fav_icon = change_fav_icon;// 表示変更
         fav_buttonbool=true;
         if(rt_buttonbool){//りついが押されてたら表示を変更する
-            model.addAttribute("rtpush", "🔃");// 表示変更
+            default_rt_icon = change_rt_icon;// 表示変更
         }
-        return "top";
+        return "redirect:/top";
     }
 
-    @GetMapping("/rt_button")
-    public String rt_button(Model model) {// ふぁぼボタンを押したときの処理
-        rt_num+=1;
-        model.addAttribute("fav", fav_num);// ふぁぼはそのまま
-        model.addAttribute("rt", rt_num);// りつい+1
-        model.addAttribute("favpush", "♡");// ふぁぼ押す前の初期値
-        model.addAttribute("rtpush", "🔃");// 表示変更
+    @PostMapping("/rt_button")
+    public String rt_button(RedirectAttributes attr) {// りついボタンを押したときの処理
+        default_rt+=1;//りつい+1
+        default_rt_icon = change_rt_icon;// 表示変更
         rt_buttonbool=true;
         if(fav_buttonbool){//ふぁぼが押されてたら表示を変更する
-            model.addAttribute("favpush", "♥");// 表示変更
+            default_fav_icon = change_fav_icon;// 表示変更
         }
-        return "top";
+        return "redirect:/top";
     }
     
     @PostMapping("/clear")
@@ -163,7 +162,6 @@ public class MainController {
        return "top";
    }
    
-   //@PostMapping("/")
    
   
 }

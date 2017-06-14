@@ -189,7 +189,7 @@
 				<button type="button" name="rep_button">⤴</button>
 				</div>
 				<div class="button">
-				<form method="get" th:action="@{/rt_button}">
+				<form method="post" th:action="@{/rt_button}">
 					<!-- りついぼたん押したときの処理 -->
 					　　　　<button type="submit" name="rt_button">
 					<span th:text="${rtpush}"></span>
@@ -203,7 +203,7 @@
 				
 				
 				<div class="button">
-				<form method="get" th:action="@{/fav_button}">
+				<form method="post" th:action="@{/fav_button}">
 					<!-- ふぁぼぼたん押したときの処理 -->
 					　　　　<button type="submit" name="fav_button">
 						<span th:text="${favpush}"></span>

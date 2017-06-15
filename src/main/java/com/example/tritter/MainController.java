@@ -149,9 +149,8 @@ public class MainController {
  * 取得した１つのtweet情報（アカウント名/スクリーンネーム/アカウント画像/ツイート内容/fav rt数）を各変数に代入し返却する
  * ツイート画像がない場合はtweetimgURLをnullとする。
  * タイムラインが読み込めなかった場合、{@link TwitterException}を返却する。
- * @param attr
+ * @param attr モデル
  * @return tweet情報が代入された各変数を返却する
- * @throws TwitterException タイムラインが取得できなかった場合
  */
    @PostMapping("/setTweet")
    public String getTweet(RedirectAttributes attr){//ツイート取得メソッド

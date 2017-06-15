@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import twitter4j.*;
 @Controller
+
 public class MainController {
 
     int default_fav = 0;// ふぁぼ初期値
@@ -30,8 +31,16 @@ public class MainController {
     String screenName = "スクリーンネーム";
     String accountimgURL = null;
     String tweetimgURL = null;
-    int tweet = 1;//test用仮引数
+    int tweet = 0;//test用仮引数
+    List<Tweets> tweets = new ArrayList<>();//ツイートのリスト
+    @Autowired
+    private TritterDao tritterDao;
     
+    @GetMapping("/test")
+    public String Test(){
+        System.out.println(tritterDao.findByAge(23));
+        return"";
+    }
     
     /**
      * tritterの初期ページ
@@ -47,12 +56,12 @@ public class MainController {
         model.addAttribute("rt", default_rt);
         model.addAttribute("favpush", default_fav_icon);
         model.addAttribute("rtpush", default_rt_icon);
-        model.addAttribute("accountname",accountName);
-        model.addAttribute("tweetcontents",tweetContents);
-        model.addAttribute("screenname","@"+screenName);
+        model.addAttribute("accountName",accountName);
+        model.addAttribute("tweetContents",tweetContents);
+        model.addAttribute("screenName",screenName);
         model.addAttribute("accountimgURL",accountimgURL);
         model.addAttribute("tweetimgURL",tweetimgURL);
-        model.addAttribute("tweets", Arrays.asList("tweet1", "tweet2","tweet3"));
+        model.addAttribute("tweets", tweets);
         return "top";
     }
 
@@ -154,25 +163,46 @@ public class MainController {
            screenName = user.getScreenName();//スクリーンネームを代入
            accountimgURL = user.getProfileImageURL();//アカウント画像のURLを代入
            List<Status> statuses = twitter.getHomeTimeline();//TLのリスト
-           tweetContents = statuses.get(tweet).getText();//最新(Listの0番目)のツイート内容
-           default_fav = statuses.get(tweet).getFavoriteCount();//ふぁぼ数代入
-           default_rt = statuses.get(tweet).getRetweetCount();//りつい数代入
-
-           MediaEntity[] mediaEntitys = statuses.get(tweet).getMediaEntities();//ツイートメディアのリスト
-           if(mediaEntitys.length ==0){//リストが空だったら
-               tweetimgURL = null;
-           }else{//リストに値が入っていたら
-           MediaEntity mediaentity = mediaEntitys[0];//リストの1つ目の要素を与える
-           tweetimgURL = mediaentity.getMediaURL();//ツイート画像URLを代入
-           }
+           //MediaEntity[] mediaEntitys = new MediaEntity[statuses.size()];
+//           MediaEntity[] mediaEntitys = statuses.get(tweet).getMediaEntities();//ツイートメディアのリスト
+//           if(mediaEntitys.length ==0){//リストが空だったら
+//               tweetimgURL = null;
+//           }else{//リストに値が入っていたら
+//           MediaEntity mediaentity = mediaEntitys[0];//リストの1つ目の要素を与える
+//           tweetimgURL = mediaentity.getMediaURL();//ツイート画像URLを代入
+//           }
            
+           for(int i=0;i<statuses.size();i++){
+               //statuses.add(statuses.get(tweet).getText());
+                //MediaEntity[] mediaEntitys = statuses.get(i).getMediaEntities();//ツイートメディアのリスト
+               //MediaEntity[] mediaEntitys = statuses.get(tweet).getMediaEntities();
+               //MediaEntity mediaentity = mediaEntitys[i];//リストの1つ目の要素を与える
+               tweets.add(new Tweets(statuses.get(i).getUser().getProfileImageURL(),statuses.get(i).getUser().getName(),
+                       statuses.get(i).getUser().getScreenName(),statuses.get(i).getText(),"",
+                       statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount()));
+//               if(mediaEntitys[i] == null){
+//                   tweetimgURL = null;
+//               }
+              
+           }
+//           tweetContents = statuses.get(tweet).getText();//最新(Listの0番目)のツイート内容
+//           default_fav = statuses.get(tweet).getFavoriteCount();//ふぁぼ数代入
+//           default_rt = statuses.get(tweet).getRetweetCount();//りつい数代入
+
+//           MediaEntity[] mediaEntitys = statuses.get(tweet).getMediaEntities();//ツイートメディアのリスト
+//           if(mediaEntitys.length ==0){//リストが空だったら
+//               tweetimgURL = null;
+//           }else{//リストに値が入っていたら
+//           MediaEntity mediaentity = mediaEntitys[0];//リストの1つ目の要素を与える
+//           tweetimgURL = mediaentity.getMediaURL();//ツイート画像URLを代入
+//           }
+
        } catch (TwitterException te) {
            te.printStackTrace();
            System.out.println("Failed to get timeline: " + te.getMessage());
            System.exit(-1);
        }
-       
-       
+       //attr.addFlashAttribute("tweets",tweets);
        return "redirect:/top";
    }
 

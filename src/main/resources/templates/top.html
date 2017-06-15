@@ -52,15 +52,15 @@
 					<a href="">
 						<div id="TLacountimage">
 							<!--TLアイコン表示-->
-							<img th:src="${accountimgURL}" alt="画像" id="TLacountimage" />
+							<img th:src="${tweet.accountimgURL}" alt="画像" id="TLacountimage" />
 
 						</div>
 
 
 						<div id="TLAccountName">
 							<p>
-								<font size="3"><span th:text="${accountname}"></span></font> <font
-									size="2"><span th:text="${screenname}"></span></font>
+								<font size="3"><span th:text="${tweet.accountName}"></span></font> <font
+									size="2">@<span th:text="${tweet.screenName}"></span></font>
 							</p>
 
 						</div>
@@ -69,7 +69,7 @@
 						<div class="TweetContents">
 							<!--TLツイート内容表示-->
 							<font size="2"><p>
-									<span th:text="${tweetcontents}"></span>
+									<span th:text="${tweet.tweetContents}"></span>
 								</p></font>
 						</div>
 
@@ -93,7 +93,7 @@
 								</form>
 							</div>
 							<div class="text">
-								<span th:text="${rt}"></span>
+								<span th:text="${tweet.rt}"></span>
 							</div>
 
 							<div class="button">
@@ -105,7 +105,7 @@
 								</form>
 							</div>
 
-							<span th:text="${fav}"></span>
+							<span th:text="${tweet.fav}"></span>
 
 
 

@@ -13,11 +13,11 @@ public class MathematicsTest {
     public void ok() {
         //System.out.println(Mathematics.sqrt(3));
         
-        assertThat(Mathematics.sqrt(9),is(4d));
+        assertThat(Mathematics.sqrt(9),is(3d));
     }
     @Test
     public void zero(){
 
-        assertThat(Mathematics.sqrt(1),is(0));
+        assertThat(Mathematics.sqrt(0),is(0));
     }
 }

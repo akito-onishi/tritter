@@ -47,7 +47,7 @@ public class MainController {
      * 
      * tritterの初期ページの設定を行う。
      * 
-     * @param model 
+     * @param model モデル
      * @return 初期設定情報を返却する。
      */
     @GetMapping("/top") // 最初の状態
@@ -75,8 +75,8 @@ public class MainController {
      * 
      * @param rt 0を許容する。負の値は許容しない。最大値9999999
      * @param fav 0を許容する。負の値は許容しない。最大値9999999
-     * @param attr
-     * @return
+     * @param attr モデル
+     * @return リツイート数とふぁぼ数を返却
      */
     @PostMapping("/rt_fav")
     public String rt_fav(int rt, int fav,RedirectAttributes attr) {// りついふぁぼ変更処理
@@ -95,8 +95,8 @@ public class MainController {
      * ふぁぼボタンが押された場合、ボタンアイコン表示を変更する。
      * 
      * 複数回のボタン操作を許容する。
-     * @param attr
-     * @return
+     * @param attr モデル
+     * @return ふぁぼボタンの数値と表示アイコンを変更し返却
      */
     @PostMapping("/fav_button")
     public String fav_button(RedirectAttributes attr) {// ふぁぼボタンを押したときの処理
@@ -113,8 +113,8 @@ public class MainController {
      * りついボタンが押された場合、ボタンアイコン表示を変更する。
      * 
      * 複数回のボタン操作を許容する。
-     * @param attr
-     * @return
+     * @param attr モデル
+     * @return りついボタンの数値と表示アイコンを変更し返却
      */
     @PostMapping("/rt_button")
     public String rt_button(RedirectAttributes attr) {// りついボタンを押したときの処理
@@ -129,7 +129,7 @@ public class MainController {
      * 
      * ユーザーが変更したリツイートやファボ数を0で返却し初期値に戻す。
      * 
-     * @param attr
+     * @param attr モデル
      * @return 初期化したファボ数・リツイート数の変数を返却する。
      */
     @PostMapping("/clear")
@@ -163,7 +163,8 @@ public class MainController {
            screenName = user.getScreenName();//スクリーンネームを代入
            accountimgURL = user.getProfileImageURL();//アカウント画像のURLを代入
            List<Status> statuses = twitter.getHomeTimeline();//TLのリスト
-           //MediaEntity[] mediaEntitys = new MediaEntity[statuses.size()];
+           List<String> tweetimgURLList = new ArrayList<String>();
+//          MediaEntity[] mediaEntitys = new MediaEntity[statuses.size()];
 //           MediaEntity[] mediaEntitys = statuses.get(tweet).getMediaEntities();//ツイートメディアのリスト
 //           if(mediaEntitys.length ==0){//リストが空だったら
 //               tweetimgURL = null;
@@ -171,16 +172,28 @@ public class MainController {
 //           MediaEntity mediaentity = mediaEntitys[0];//リストの1つ目の要素を与える
 //           tweetimgURL = mediaentity.getMediaURL();//ツイート画像URLを代入
 //           }
+      
            
            for(int i=0;i<statuses.size();i++){
                //statuses.add(statuses.get(tweet).getText());
                 //MediaEntity[] mediaEntitys = statuses.get(i).getMediaEntities();//ツイートメディアのリスト
-               //MediaEntity[] mediaEntitys = statuses.get(tweet).getMediaEntities();
-               //MediaEntity mediaentity = mediaEntitys[i];//リストの1つ目の要素を与える
+               MediaEntity[] mediaEntitys = statuses.get(i).getMediaEntities();
+               for(MediaEntity m: mediaEntitys){
+                   tweetimgURLList.add(m.getMediaURL());
+               }
+               System.out.println(i);
+               System.out.println(tweetimgURLList.get(i));
+//                mediaEntitys = statuses.get(i).getMediaEntities();
+//               if(mediaEntitys[i] == null){
+//                   tweetimgURL = null;
+//               }else{
+//                   tweetimgURL = mediaEntitys[i].getMediaURL();//ツイート画像URLを代入
+//               }
                tweets.add(new Tweets(statuses.get(i).getUser().getProfileImageURL(),statuses.get(i).getUser().getName(),
                        statuses.get(i).getUser().getScreenName(),statuses.get(i).getText(),"",
                        statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount()));
-//               if(mediaEntitys[i] == null){
+                       System.out.println(mediaEntitys[i].getMediaURL());
+               //               if(mediaEntitys[i] == null){
 //                   tweetimgURL = null;
 //               }
               

@@ -10,7 +10,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class TritterApplicationTests {
 
 	@Test
-	public void contextLoads() {
+	public void tweetList() {
+	    
+	    System.out.println();
 	}
 
 }

@@ -8,8 +8,9 @@ public class Tweets {
     String tweetimgURL;
     int fav;// ふぁぼ初期値
     int rt;// りつい初期値
+    int tweetNum;
     
-    public Tweets(String accountimgURL,String accountName, String screenName,String tweetContents, String tweetimgURL, int fav, int rt){
+    public Tweets(String accountimgURL,String accountName, String screenName,String tweetContents, String tweetimgURL, int fav, int rt, int tweetNum){
 
         this.accountimgURL = accountimgURL;
         this.accountName = accountName;
@@ -18,6 +19,7 @@ public class Tweets {
         this.tweetimgURL = tweetimgURL;
         this.fav = fav;
         this.rt = rt;
+        this.tweetNum = tweetNum;
 
     }
     
@@ -47,5 +49,9 @@ public class Tweets {
     
     public int getRt(){
         return this.rt;
+    }
+    
+    public int getTweetNum(){
+        return this.tweetNum;
     }
 }

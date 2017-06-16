@@ -4,6 +4,7 @@
 <head>
 
 <title>Tritter</title>
+<script src="http://code.jquery.com/jquery-2.0.0.js"></script>
 
 <link rel="shortcut icon" href="favicon.ico" />
 <meta charset="UTF-8" />
@@ -32,7 +33,8 @@
 		<div class="TimeLine">
 			<!--タイムラインエリア-->
 
-			<h1>TimeLine</h1>
+			<h1>TimeLine</h1>        
+
 
 
 			<p>タイムライン情報を表示
@@ -40,7 +42,7 @@
 				<button type="submit" name="TLread_button">ツイート読み込み</button>
 			</form>
 			</p>
-
+            
 			<!--th:each-->
 			<div th:each="tweet : ${tweets}">
 
@@ -48,6 +50,7 @@
 
 
 				<div id="TLtweet">
+                   <div th:id ="${tweet.tweetNum}">
 					<!--タイムラインの一つのツイート-->
 					<a href="">
 						<div id="TLacountimage">
@@ -112,7 +115,7 @@
 						</div>
 					</a>
 				</div>
-
+               </div>
 			</div>
 		</div>
 
@@ -222,6 +225,13 @@
 		</div>
 
 	</div>
+
+<script>
+$("#1").click(function(){
+  alert("クリック");
+});
+
+</script>
 
 </body>
 </html>

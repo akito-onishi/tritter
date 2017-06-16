@@ -75,7 +75,7 @@
 
 						<div class="TLTweetimg">
 							<!--ツイート写真があれば表示-->
-							<img th:src="${tweetimgURL}" alt="" class="TLTweetimg" />
+							<img th:src="${tweet.tweetimgURL}" alt="" class="TLTweetimg" />
 						</div>
 
 						<div class="Rep">
@@ -206,7 +206,7 @@
 			<h2>ButtonArea</h2>
 			<p>ボタンを配置</p>
 			<p>
-			<form method="post" th:action="@{/rt_fav}">
+			<form method="post" th:action="@{/rt_fav_Input}">
 
 				<button type="enjo">炎上</button>
 				RT数変更<input type="number" name="rt" max="9999999" min="0"

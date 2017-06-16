@@ -78,10 +78,10 @@ public class MainController {
      * @param attr モデル
      * @return リツイート数とふぁぼ数を返却
      */
-    @PostMapping("/rt_fav")
-    public String rt_fav(int rt, int fav,RedirectAttributes attr) {// りついふぁぼ変更処理
-        default_fav = fav;// 変数に代入
-        default_rt = rt;// 変数に代入
+    @PostMapping("/rt_fav_Input")
+    public String rt_fav_Input(Rt_Fav_InputForm form,RedirectAttributes attr) {// りついふぁぼ変更処理
+        default_fav = form.getFav();// 変数に代入
+        default_rt = form.getRt();// 変数に代入
         fav_buttonbool=false;//初期化
         rt_buttonbool=false;//初期化
         
@@ -163,39 +163,21 @@ public class MainController {
            accountimgURL = user.getProfileImageURL();//アカウント画像のURLを代入
            List<Status> statuses = twitter.getHomeTimeline();//TLのリスト
            List<String> tweetimgURLList = new ArrayList<String>();
-//          MediaEntity[] mediaEntitys = new MediaEntity[statuses.size()];
-//           MediaEntity[] mediaEntitys = statuses.get(tweet).getMediaEntities();//ツイートメディアのリスト
-//           if(mediaEntitys.length ==0){//リストが空だったら
-//               tweetimgURL = null;
-//           }else{//リストに値が入っていたら
-//           MediaEntity mediaentity = mediaEntitys[0];//リストの1つ目の要素を与える
-//           tweetimgURL = mediaentity.getMediaURL();//ツイート画像URLを代入
-//           }
-      
-           
+
            for(int i=0;i<statuses.size();i++){
-               //statuses.add(statuses.get(tweet).getText());
-                //MediaEntity[] mediaEntitys = statuses.get(i).getMediaEntities();//ツイートメディアのリスト
                MediaEntity[] mediaEntitys = statuses.get(i).getMediaEntities();
-               for(MediaEntity m: mediaEntitys){
-                   tweetimgURLList.add(m.getMediaURL());
+               if (mediaEntitys.length == 0) {
+                   tweetimgURLList.add("");
                }
-               System.out.println(i);
-               System.out.println(tweetimgURLList.get(i));
-//                mediaEntitys = statuses.get(i).getMediaEntities();
-//               if(mediaEntitys[i] == null){
-//                   tweetimgURL = null;
-//               }else{
-//                   tweetimgURL = mediaEntitys[i].getMediaURL();//ツイート画像URLを代入
-//               }
+               for(MediaEntity m:mediaEntitys){
+                   tweetimgURLList.add(m.getMediaURL());
+                   
+               }
+               
                tweets.add(new Tweets(statuses.get(i).getUser().getProfileImageURL(),statuses.get(i).getUser().getName(),
-                       statuses.get(i).getUser().getScreenName(),statuses.get(i).getText(),"",
+                       statuses.get(i).getUser().getScreenName(),statuses.get(i).getText(),tweetimgURLList.get(i),
                        statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount()));
-                       System.out.println(mediaEntitys[i].getMediaURL());
-               //               if(mediaEntitys[i] == null){
-//                   tweetimgURL = null;
-//               }
-              
+
            }
 //           tweetContents = statuses.get(tweet).getText();//最新(Listの0番目)のツイート内容
 //           default_fav = statuses.get(tweet).getFavoriteCount();//ふぁぼ数代入

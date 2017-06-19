@@ -15,7 +15,6 @@ public class GetTweet {
           //ついーとしてみる
            // twitter.updateStatus("st");
             System.out.println("一つ目のツイートを表示: "+statuses.get(0).getText());
-            
             for (Status status : statuses) {
                 System.out.println("@" + status.getUser().getScreenName() + " - 「" + status.getText()+"」       ふぁぼ"+status.getFavoriteCount()+"     りつい"+status.getRetweetCount());
             }

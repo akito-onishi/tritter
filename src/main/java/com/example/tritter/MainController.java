@@ -21,6 +21,7 @@ public class MainController {
     int default_fav = 0;// ふぁぼ初期値
     int default_rt = 0;// りつい初期値
     int tweetNum = 0;
+    long tweetId = 0;//ツイートID
     boolean fav_buttonbool=false;// ふぁぼボタンを押したかどうか
     boolean rt_buttonbool=false;//りついボタンを押したかどうか
     String default_fav_icon = "♡";
@@ -176,8 +177,8 @@ public class MainController {
                
                tweets.add(new Tweets(statuses.get(i).getUser().getProfileImageURL(),statuses.get(i).getUser().getName(),
                        statuses.get(i).getUser().getScreenName(),statuses.get(i).getText(),tweetimgURLList.get(i),
-                       statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount(),i));
-
+                       statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount(),statuses.get(i).getId()));
+                   System.out.println(statuses.get(i).getId()+":"+i);
            }
 
        } catch (TwitterException te) {
@@ -189,5 +190,11 @@ public class MainController {
        return "redirect:/top";
    }
 
+   @PostMapping("/setTweet")
+   public String setTweet(RedirectAttributes attr){
+
+       return "redirect:/top";
+   }
+   
 
 }

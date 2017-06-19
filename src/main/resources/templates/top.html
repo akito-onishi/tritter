@@ -50,7 +50,7 @@
 
 
 				<div id="TLtweet">
-                   <div th:id ="${tweet.tweetNum}">
+                   <div th:id ="${tweet.tweetId}">
 					<!--タイムラインの一つのツイート-->
 					<a href="">
 						<div id="TLacountimage">
@@ -227,8 +227,9 @@
 	</div>
 
 <script>
-$("#1").click(function(){
-  alert("クリック");
+$("#0").click(function(){
+  alert(this.id);
+  alert($(this, "div").text());
 });
 
 </script>

@@ -8,9 +8,9 @@ public class Tweets {
     String tweetimgURL;
     int fav;// ふぁぼ初期値
     int rt;// りつい初期値
-    long tweetId;
+    String tweetId;
     
-    public Tweets(String accountimgURL,String accountName, String screenName,String tweetContents, String tweetimgURL, int fav, int rt, long tweetId){
+    public Tweets(String accountimgURL,String accountName, String screenName,String tweetContents, String tweetimgURL, int fav, int rt, String tweetId){
 
         this.accountimgURL = accountimgURL;
         this.accountName = accountName;
@@ -51,7 +51,7 @@ public class Tweets {
         return this.rt;
     }
     
-    public long getTweetId(){
+    public String getTweetId(){
         return this.tweetId;
     }
 }

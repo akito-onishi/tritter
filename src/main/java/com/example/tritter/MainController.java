@@ -21,7 +21,6 @@ public class MainController {
     int default_fav = 0;// ふぁぼ初期値
     int default_rt = 0;// りつい初期値
     int tweetNum = 0;
-    long tweetId = 0;//ツイートID
     boolean fav_buttonbool=false;// ふぁぼボタンを押したかどうか
     boolean rt_buttonbool=false;//りついボタンを押したかどうか
     String default_fav_icon = "♡";
@@ -31,6 +30,7 @@ public class MainController {
     String accountName = "アカウント名";
     String tweetContents = "ツイート内容";
     String screenName = "スクリーンネーム";
+    String tweetId = "";//ツイートID
     String accountimgURL = null;
     String tweetimgURL = null;
     List<Tweets> tweets = new ArrayList<>();//ツイートのリスト
@@ -173,8 +173,7 @@ public class MainController {
                
                tweets.add(new Tweets(statuses.get(i).getUser().getProfileImageURL(),statuses.get(i).getUser().getName(),
                        statuses.get(i).getUser().getScreenName(),statuses.get(i).getText(),tweetimgURLList.get(i),
-                       statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount(),statuses.get(i).getId()));
-                   tweetId = statuses.get(0).getId();
+                       statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount(),String.valueOf(statuses.get(i).getId())));
            }
 
        } catch (TwitterException te) {
@@ -188,14 +187,21 @@ public class MainController {
 
    @PostMapping("/setTweet")
    public String setTweet(RedirectAttributes attr,String tweetId){
-            System.out.println(tweetId);
-            default_fav = tweets.get(0).getFav();
-            default_rt = tweets.get(0).getRt();
-            accountName = tweets.get(0).getAccountName();
-            tweetContents = tweets.get(0).getTweetContents();
-            screenName = tweets.get(0).getScreenName();
-            accountimgURL = tweets.get(0).getAccountimgURL();
-            tweetimgURL =tweetimgURLList.get(0);
+
+            for(Tweets tweet: tweets){
+
+                if(tweetId.equals(tweet.getTweetId())){
+                    
+                    default_fav = tweet.getFav();
+                    default_rt = tweet.getRt();
+                    accountName = tweet.getAccountName();
+                    tweetContents = tweet.getTweetContents();
+                    screenName = tweet.getScreenName();
+                    accountimgURL = tweet.getAccountimgURL();
+                    tweetimgURL =tweet.getTweetimgURL();
+                    break;
+                }
+            }
 
        return "redirect:/top";
    }

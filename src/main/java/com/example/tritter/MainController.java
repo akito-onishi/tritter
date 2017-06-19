@@ -187,8 +187,8 @@ public class MainController {
    }
 
    @PostMapping("/setTweet")
-   public String setTweet(RedirectAttributes attr,long id){
-            System.out.println(id);
+   public String setTweet(RedirectAttributes attr,String tweetId){
+            System.out.println(tweetId);
             default_fav = tweets.get(0).getFav();
             default_rt = tweets.get(0).getRt();
             accountName = tweets.get(0).getAccountName();

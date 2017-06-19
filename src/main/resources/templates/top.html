@@ -37,19 +37,14 @@
 
             
 
-			<p>タイムライン情報を表示
-			</p>
+			<p>タイムライン情報を表示</p>
              <form method="post" th:action="@{/getTweet}">
             <button type="submit" name="TLread_button">タイムライン読み込み</button>
             </form>
 			<!--th:each-->
 			<div th:each="tweet : ${tweets}">
-
-
-
-
 				<div class="TLtweet">
-                   <div th:id ="${tweet.tweetId}" onClick="Div()">
+                   <div th:id ="${tweet.tweetId}">
 					<!--タイムラインの一つのツイート-->
 					<a href="">
 						<div class="TLacountimage">
@@ -65,9 +60,12 @@
 									size="2">@<span th:text="${tweet.screenName}"></span></font>
 							</p>
 						</div>
-						
 
 
+                        <form method="post" th:action="@{/setTweet}">
+                          <input name="tweetId" type="hidden" th:value="${tweet.tweetId}" />
+                          <button type="submit">表示</button>
+                        </form>
 
 						<div class="TweetContents">
 							<!--TLツイート内容表示-->
@@ -109,8 +107,6 @@
 							</div>
 
 							<span th:text="${tweet.fav}"></span>
-
-
 
 						</div>
 					</a>
@@ -204,7 +200,7 @@
 			<!--ボタン配置エリア-->
 			<h2>ButtonArea</h2>
 			<p>ボタンを配置</p>
-			<p>
+			
 			<form method="post" th:action="@{/rt_fav_Input}">
 
 				<button type="enjo">炎上</button>
@@ -216,28 +212,10 @@
 			<form method="post" th:action="@{/clear}">
 				<button type="submit">クリア</button>
 			</form>
-			</p>
 
 		</div>
 
 	</div>
 
-<script>
-$("#876640871105437697").click(function(){
-alert(this.id);
-
-});
-
-</script>
-
-<form method="post" th:action="@{/setTweet}">
-<script>
-    function Div{
-    	
-    	id = document.getElementById(this.id);
-    	<input type="number" th:value="${id}" />
-    }
-</script>
-</form>
 </body>
 </html>

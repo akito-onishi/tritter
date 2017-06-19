@@ -34,6 +34,7 @@ public class MainController {
     String accountimgURL = null;
     String tweetimgURL = null;
     List<Tweets> tweets = new ArrayList<>();//ツイートのリスト
+    List<String> tweetimgURLList = new ArrayList<String>();
     @Autowired
     private TritterDao tritterDao;
     
@@ -153,17 +154,12 @@ public class MainController {
  * @param attr モデル
  * @return tweet情報が代入された各変数を返却する
  */
-   @PostMapping("/setTweet")
+   @PostMapping("/getTweet")
    public String getTweet(RedirectAttributes attr){//ツイート取得メソッド
        try {
            Twitter twitter = new TwitterFactory().getInstance();
-           User user = twitter.verifyCredentials();
-
-           accountName = user.getName();//アカウント名を代入
-           screenName = user.getScreenName();//スクリーンネームを代入
-           accountimgURL = user.getProfileImageURL();//アカウント画像のURLを代入
            List<Status> statuses = twitter.getHomeTimeline();//TLのリスト
-           List<String> tweetimgURLList = new ArrayList<String>();
+           
            tweetNum = statuses.size();
            for(int i=0;i<statuses.size();i++){
                MediaEntity[] mediaEntitys = statuses.get(i).getMediaEntities();
@@ -178,7 +174,7 @@ public class MainController {
                tweets.add(new Tweets(statuses.get(i).getUser().getProfileImageURL(),statuses.get(i).getUser().getName(),
                        statuses.get(i).getUser().getScreenName(),statuses.get(i).getText(),tweetimgURLList.get(i),
                        statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount(),statuses.get(i).getId()));
-                   System.out.println(statuses.get(i).getId()+":"+i);
+                   tweetId = statuses.get(0).getId();
            }
 
        } catch (TwitterException te) {
@@ -191,7 +187,15 @@ public class MainController {
    }
 
    @PostMapping("/setTweet")
-   public String setTweet(RedirectAttributes attr){
+   public String setTweet(RedirectAttributes attr,long id){
+            System.out.println(id);
+            default_fav = tweets.get(0).getFav();
+            default_rt = tweets.get(0).getRt();
+            accountName = tweets.get(0).getAccountName();
+            tweetContents = tweets.get(0).getTweetContents();
+            screenName = tweets.get(0).getScreenName();
+            accountimgURL = tweets.get(0).getAccountimgURL();
+            tweetimgURL =tweetimgURLList.get(0);
 
        return "redirect:/top";
    }

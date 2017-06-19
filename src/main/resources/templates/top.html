@@ -32,41 +32,41 @@
 
 		<div class="TimeLine">
 			<!--タイムラインエリア-->
-
+           
 			<h1>TimeLine</h1>        
 
-
+            
 
 			<p>タイムライン情報を表示
-			<form method="post" th:action="@{/setTweet}">
-				<button type="submit" name="TLread_button">ツイート読み込み</button>
-			</form>
 			</p>
-            
+             <form method="post" th:action="@{/getTweet}">
+            <button type="submit" name="TLread_button">タイムライン読み込み</button>
+            </form>
 			<!--th:each-->
 			<div th:each="tweet : ${tweets}">
 
 
 
 
-				<div id="TLtweet">
-                   <div th:id ="${tweet.tweetId}">
+				<div class="TLtweet">
+                   <div th:id ="${tweet.tweetId}" onClick="Div()">
 					<!--タイムラインの一つのツイート-->
 					<a href="">
-						<div id="TLacountimage">
+						<div class="TLacountimage">
 							<!--TLアイコン表示-->
 							<img th:src="${tweet.accountimgURL}" alt="画像" id="TLacountimage" />
 
 						</div>
 
 
-						<div id="TLAccountName">
+						<div class="TLAccountName">
 							<p>
 								<font size="3"><span th:text="${tweet.accountName}"></span></font> <font
 									size="2">@<span th:text="${tweet.screenName}"></span></font>
 							</p>
-
 						</div>
+						
+
 
 
 						<div class="TweetContents">
@@ -124,7 +124,7 @@
 
 			<div id="acountimage">
 				<!--アイコン表示-->
-				<img src="画像.png" alt="画像" id="acountimage" />
+				<img th:src="${accountimgURL}" alt="画像" id="acountimage" />
 			</div>
 
 			<div id="followimage">
@@ -133,24 +133,20 @@
 			</div>
 
 			<div id="AccountName">
-				<h2>アカウント名</h2>
-				<p>@acount</p>
+				<h2><span th:text="${accountName}">
+				</span></h2>
+				<p>@<span th:text="${screenName}"></span></p>
 			</div>
 
 
 			<div class="TweetContents">
 				<!--ツイート内容表示-->
-				<p>ツイート内容ツイート内容ツイート内容ツイート内容 ツイート内容ツイート内容ツイート内容ツイート内容
-					ツイート内容ツイート内容ツイート内容ツイート内容 ツイート内容ツイート内容ツイート内容ツイート内容
-					ツイート内容ツイート内容ツイート内容ツイート内容
-					ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容ツイート内容</p>
-
-
+                <span th:text="${tweetContents}"></span>
 			</div>
 
 			<div id="Tweetimg">
 				<!--ツイート写真があれば表示-->
-				<img src="画像.png" alt="画像" id="Tweetimg" />
+				<img th:src="${tweetimgURL}" alt="" id="Tweetimg" />
 			</div>
 
 			<div id="RT">
@@ -227,12 +223,21 @@
 	</div>
 
 <script>
-$("#0").click(function(){
-  alert(this.id);
-  alert($(this, "div").text());
+$("#876640871105437697").click(function(){
+alert(this.id);
+
 });
 
 </script>
 
+<form method="post" th:action="@{/setTweet}">
+<script>
+    function Div{
+    	
+    	id = document.getElementById(this.id);
+    	<input type="number" th:value="${id}" />
+    }
+</script>
+</form>
 </body>
 </html>

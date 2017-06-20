@@ -23,6 +23,7 @@ public class MainController {
     int Fav;
     int Rt;
     int tweetNum = 0;
+    int notificationCount;//通知の数値をカウント
     boolean favButtonbool=false;// ふぁぼボタンを押したかどうか
     boolean rtButtonbool=false;//りついボタンを押したかどうか
     String defaultFavIcon = "♡";
@@ -71,6 +72,7 @@ public class MainController {
         model.addAttribute("tweetNum", tweetNum);
         model.addAttribute("tweetID",tweetID);
         model.addAttribute("tweetTime",tweetTime);
+        model.addAttribute("notificationCount",notificationCount);
         return "top";
         
     }
@@ -93,7 +95,9 @@ public class MainController {
         Rt = form.getRt();// 変数に代入
         favButtonbool=false;//初期化
         rtButtonbool=false;//初期化
-
+        
+        notificationCount = Fav + Rt;
+        
         return "redirect:/top";
     }
 
@@ -110,6 +114,7 @@ public class MainController {
     @PostMapping("/favButton")
     public String favButton(RedirectAttributes attr) {// ふぁぼボタンを押したときの処理
         Fav+= 1;// ふぁぼ＋１
+        notificationCount+=1;
         defaultFavIcon = changeFavIcon;// 表示変更
         favButtonbool=true;
 
@@ -128,11 +133,14 @@ public class MainController {
     @PostMapping("/rtButton")
     public String rtButton(RedirectAttributes attr) {// りついボタンを押したときの処理
         Rt+=1;//りつい+1
+        notificationCount+=1;
         defaultRtIcon = changeRtIcon;// 表示変更
         rtButtonbool=true;
 
         return "redirect:/top";
     }
+    
+    
     /**
      * 入力値を初期化する
      * 
@@ -145,6 +153,7 @@ public class MainController {
     public String Clear(RedirectAttributes attr){
         Fav = defaultFav;
         Rt = defaultRt;
+        notificationCount = 0;
         defaultFavIcon = "♡";
         defaultRtIcon = "🔁";
         favButtonbool=false;//初期化
@@ -211,6 +220,7 @@ public class MainController {
                     defaultRt = tweet.getRt();
                     Fav = defaultFav;
                     Rt = defaultRt;
+                    notificationCount = 0;
                     accountName = tweet.getAccountName();
                     tweetContents = tweet.getTweetContents();
                     screenName = tweet.getScreenName();

@@ -13,7 +13,12 @@
     overflow: scroll;/*スクロールバー*/
     height:950px;/*この値を超えたらスクロール*/
 }
-
+.Notification{
+	float: right;
+    width:700px; 
+    height:auto;
+    background-color:#80ffff;
+}
 .Tweet{
    float: right;
     width:700px; 

@@ -12,7 +12,7 @@ public class GetTweet {
             List<Status> statuses = twitter.getHomeTimeline();
             System.out.println("Showing @" + user.getScreenName() + "'s home timeline.");
             System.out.println("プロフィール画像のURL:"+user.getProfileImageURL());
-            System.out.println(statuses.get(0).getCreatedAt().getYear());
+            System.out.println(statuses.get(0).getCreatedAt());
             System.out.println(statuses.get(0).getInReplyToScreenName());
             System.out.println(statuses.get(0).getInReplyToUserId());
           //ついーとしてみる

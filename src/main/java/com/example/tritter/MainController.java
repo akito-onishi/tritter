@@ -194,7 +194,7 @@ public class MainController {
  * 
  * @param attr モデル
  * @param tweetId ツイートID String型
- * @return 
+ * @return 各変数にツイート情報を与えて返却
  */
    @PostMapping("/setTweet")
    public String setTweet(RedirectAttributes attr,String tweetId){

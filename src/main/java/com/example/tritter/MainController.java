@@ -18,15 +18,15 @@ import twitter4j.*;
 
 public class MainController {
 
-    int default_fav = 0;// ふぁぼ初期値
-    int default_rt = 0;// りつい初期値
+    int defaultFav = 0;// ふぁぼ初期値
+    int defaultRt = 0;// りつい初期値
     int tweetNum = 0;
-    boolean fav_buttonbool=false;// ふぁぼボタンを押したかどうか
-    boolean rt_buttonbool=false;//りついボタンを押したかどうか
-    String default_fav_icon = "♡";
-    String change_fav_icon = "❤";
-    String default_rt_icon = "🔁";
-    String change_rt_icon = "🔃";
+    boolean favButtonbool=false;// ふぁぼボタンを押したかどうか
+    boolean rtButtonbool=false;//りついボタンを押したかどうか
+    String defaultFavIcon = "♡";
+    String changeFavIcon = "❤";
+    String defaultRtIcon = "🔁";
+    String changeRtIcon = "🔃";
     String accountName = "アカウント名";
     String tweetContents = "ツイート内容";
     String screenName = "スクリーンネーム";
@@ -54,10 +54,10 @@ public class MainController {
      */
     @GetMapping("/top") // 最初の状態
     public String top(Model model) {
-        model.addAttribute("fav", default_fav);
-        model.addAttribute("rt", default_rt);
-        model.addAttribute("favpush", default_fav_icon);
-        model.addAttribute("rtpush", default_rt_icon);
+        model.addAttribute("fav", defaultFav);
+        model.addAttribute("rt", defaultRt);
+        model.addAttribute("favIcon", defaultFavIcon);
+        model.addAttribute("rtIcon", defaultRtIcon);
         model.addAttribute("accountName",accountName);
         model.addAttribute("tweetContents",tweetContents);
         model.addAttribute("screenName",screenName);
@@ -80,12 +80,12 @@ public class MainController {
      * @param attr モデル
      * @return リツイート数とふぁぼ数を返却
      */
-    @PostMapping("/rt_fav_Input")
-    public String rt_fav_Input(Rt_Fav_InputForm form,RedirectAttributes attr) {// りついふぁぼ変更処理
-        default_fav = form.getFav();// 変数に代入
-        default_rt = form.getRt();// 変数に代入
-        fav_buttonbool=false;//初期化
-        rt_buttonbool=false;//初期化
+    @PostMapping("/rtFavInput")
+    public String rtFavInput(RtFavInputForm form,RedirectAttributes attr) {// りついふぁぼ変更処理
+        defaultFav = form.getFav();// 変数に代入
+        defaultRt = form.getRt();// 変数に代入
+        favButtonbool=false;//初期化
+        rtButtonbool=false;//初期化
         
         return "redirect:/top";
     }
@@ -100,11 +100,11 @@ public class MainController {
      * @param attr モデル
      * @return ふぁぼボタンの数値と表示アイコンを変更し返却
      */
-    @PostMapping("/fav_button")
-    public String fav_button(RedirectAttributes attr) {// ふぁぼボタンを押したときの処理
-        default_fav+=1;// ふぁぼ＋１
-        default_fav_icon = change_fav_icon;// 表示変更
-        fav_buttonbool=true;
+    @PostMapping("/favButton")
+    public String favButton(RedirectAttributes attr) {// ふぁぼボタンを押したときの処理
+        defaultFav+=1;// ふぁぼ＋１
+        defaultFavIcon = changeFavIcon;// 表示変更
+        favButtonbool=true;
        
         return "redirect:/top";
     }
@@ -118,11 +118,11 @@ public class MainController {
      * @param attr モデル
      * @return りついボタンの数値と表示アイコンを変更し返却
      */
-    @PostMapping("/rt_button")
-    public String rt_button(RedirectAttributes attr) {// りついボタンを押したときの処理
-        default_rt+=1;//りつい+1
-        default_rt_icon = change_rt_icon;// 表示変更
-        rt_buttonbool=true;
+    @PostMapping("/rtButton")
+    public String rtButton(RedirectAttributes attr) {// りついボタンを押したときの処理
+        defaultRt+=1;//りつい+1
+        defaultRtIcon = changeRtIcon;// 表示変更
+        rtButtonbool=true;
         
         return "redirect:/top";
     }
@@ -136,12 +136,12 @@ public class MainController {
      */
     @PostMapping("/clear")
     public String Clear(RedirectAttributes attr){
-        default_fav = 0;// ふぁぼ初期化
-        default_rt = 0;// りつい初期化
-        default_fav_icon = "♡";
-        default_rt_icon = "🔁";
-        fav_buttonbool=false;//初期化
-        rt_buttonbool=false;//初期化
+        defaultFav = 0;// ふぁぼ初期化
+        defaultRt = 0;// りつい初期化
+        defaultFavIcon = "♡";
+        defaultRtIcon = "🔁";
+        favButtonbool=false;//初期化
+        rtButtonbool=false;//初期化
         return "redirect:/top";
     }
     
@@ -192,8 +192,8 @@ public class MainController {
 
                 if(tweetId.equals(tweet.getTweetId())){
                     
-                    default_fav = tweet.getFav();
-                    default_rt = tweet.getRt();
+                    defaultFav = tweet.getFav();
+                    defaultRt = tweet.getRt();
                     accountName = tweet.getAccountName();
                     tweetContents = tweet.getTweetContents();
                     screenName = tweet.getScreenName();

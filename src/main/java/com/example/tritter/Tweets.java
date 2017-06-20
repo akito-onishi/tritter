@@ -9,8 +9,9 @@ public class Tweets {
     int fav;// ふぁぼ初期値
     int rt;// りつい初期値
     String tweetId;
+    String tweetTime;
     
-    public Tweets(String accountimgURL,String accountName, String screenName,String tweetContents, String tweetimgURL, int fav, int rt, String tweetId){
+    public Tweets(String accountimgURL,String accountName, String screenName,String tweetContents, String tweetimgURL, int fav, int rt, String tweetId,String tweetTime){
 
         this.accountimgURL = accountimgURL;
         this.accountName = accountName;
@@ -20,6 +21,7 @@ public class Tweets {
         this.fav = fav;
         this.rt = rt;
         this.tweetId = tweetId;
+        this.tweetTime = tweetTime;
 
     }
     
@@ -53,5 +55,9 @@ public class Tweets {
     
     public String getTweetId(){
         return this.tweetId;
+    }
+    
+    public String getTweetTime(){
+        return this.tweetTime;
     }
 }

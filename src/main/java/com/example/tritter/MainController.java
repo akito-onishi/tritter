@@ -35,6 +35,7 @@ public class MainController {
     String tweetID = "";//ツイートID
     String accountimgURL = null;
     String tweetimgURL = null;
+    String tweetTime;
     List<Tweets> tweets = new ArrayList<>();//ツイートのリスト
     List<String> tweetimgURLList = new ArrayList<String>();
     @Autowired
@@ -69,6 +70,7 @@ public class MainController {
         model.addAttribute("tweets", tweets);
         model.addAttribute("tweetNum", tweetNum);
         model.addAttribute("tweetID",tweetID);
+        model.addAttribute("tweetTime",tweetTime);
         return "top";
         
     }
@@ -178,7 +180,9 @@ public class MainController {
                
                tweets.add(new Tweets(statuses.get(i).getUser().getProfileImageURL(),statuses.get(i).getUser().getName(),
                        statuses.get(i).getUser().getScreenName(),statuses.get(i).getText(),tweetimgURLList.get(i),
-                       statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount(),String.valueOf(statuses.get(i).getId())));
+                       statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount(),String.valueOf(statuses.get(i).getId()),
+                       String.valueOf(statuses.get(i).getCreatedAt())));
+               
            }
 
        } catch (TwitterException te) {
@@ -194,7 +198,7 @@ public class MainController {
  * 
  * @param attr モデル
  * @param tweetId ツイートID String型
- * @return 各変数にツイート情報を与えて返却
+ * @return 各変数にツイート情報を与えて
  */
    @PostMapping("/setTweet")
    public String setTweet(RedirectAttributes attr,String tweetId){
@@ -213,7 +217,7 @@ public class MainController {
                     accountimgURL = tweet.getAccountimgURL();
                     tweetimgURL =tweet.getTweetimgURL();
                     tweetID = tweet.getTweetId();
-                    
+                    tweetTime = tweet.getTweetTime();
                     break;
                 }
             }

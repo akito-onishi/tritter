@@ -20,6 +20,8 @@ public class MainController {
 
     int defaultFav = 0;// ふぁぼ初期値
     int defaultRt = 0;// りつい初期値
+    int Fav;
+    int Rt;
     int tweetNum = 0;
     boolean favButtonbool=false;// ふぁぼボタンを押したかどうか
     boolean rtButtonbool=false;//りついボタンを押したかどうか
@@ -30,7 +32,7 @@ public class MainController {
     String accountName = "アカウント名";
     String tweetContents = "ツイート内容";
     String screenName = "スクリーンネーム";
-    String tweetId = "";//ツイートID
+    String tweetID = "";//ツイートID
     String accountimgURL = null;
     String tweetimgURL = null;
     List<Tweets> tweets = new ArrayList<>();//ツイートのリスト
@@ -54,8 +56,9 @@ public class MainController {
      */
     @GetMapping("/top") // 最初の状態
     public String top(Model model) {
-        model.addAttribute("fav", defaultFav);
-        model.addAttribute("rt", defaultRt);
+
+        model.addAttribute("fav", Fav);
+        model.addAttribute("rt", Rt);
         model.addAttribute("favIcon", defaultFavIcon);
         model.addAttribute("rtIcon", defaultRtIcon);
         model.addAttribute("accountName",accountName);
@@ -65,7 +68,9 @@ public class MainController {
         model.addAttribute("tweetimgURL",tweetimgURL);
         model.addAttribute("tweets", tweets);
         model.addAttribute("tweetNum", tweetNum);
+        model.addAttribute("tweetID",tweetID);
         return "top";
+        
     }
 
     /**
@@ -82,11 +87,11 @@ public class MainController {
      */
     @PostMapping("/rtFavInput")
     public String rtFavInput(RtFavInputForm form,RedirectAttributes attr) {// りついふぁぼ変更処理
-        defaultFav = form.getFav();// 変数に代入
-        defaultRt = form.getRt();// 変数に代入
+        Fav = form.getFav();// 変数に代入
+        Rt = form.getRt();// 変数に代入
         favButtonbool=false;//初期化
         rtButtonbool=false;//初期化
-        
+
         return "redirect:/top";
     }
 
@@ -102,10 +107,10 @@ public class MainController {
      */
     @PostMapping("/favButton")
     public String favButton(RedirectAttributes attr) {// ふぁぼボタンを押したときの処理
-        defaultFav+=1;// ふぁぼ＋１
+        Fav+= 1;// ふぁぼ＋１
         defaultFavIcon = changeFavIcon;// 表示変更
         favButtonbool=true;
-       
+
         return "redirect:/top";
     }
     /**
@@ -120,10 +125,10 @@ public class MainController {
      */
     @PostMapping("/rtButton")
     public String rtButton(RedirectAttributes attr) {// りついボタンを押したときの処理
-        defaultRt+=1;//りつい+1
+        Rt+=1;//りつい+1
         defaultRtIcon = changeRtIcon;// 表示変更
         rtButtonbool=true;
-        
+
         return "redirect:/top";
     }
     /**
@@ -136,8 +141,8 @@ public class MainController {
      */
     @PostMapping("/clear")
     public String Clear(RedirectAttributes attr){
-        defaultFav = 0;// ふぁぼ初期化
-        defaultRt = 0;// りつい初期化
+        Fav = defaultFav;
+        Rt = defaultRt;
         defaultFavIcon = "♡";
         defaultRtIcon = "🔁";
         favButtonbool=false;//初期化
@@ -184,7 +189,13 @@ public class MainController {
 
        return "redirect:/top";
    }
-
+/**
+ * ユーザが選択したツイートのIDと一致するIDを持つツイート情報を表示する。
+ * 
+ * @param attr モデル
+ * @param tweetId ツイートID String型
+ * @return 
+ */
    @PostMapping("/setTweet")
    public String setTweet(RedirectAttributes attr,String tweetId){
 
@@ -194,11 +205,15 @@ public class MainController {
                     
                     defaultFav = tweet.getFav();
                     defaultRt = tweet.getRt();
+                    Fav = defaultFav;
+                    Rt = defaultRt;
                     accountName = tweet.getAccountName();
                     tweetContents = tweet.getTweetContents();
                     screenName = tweet.getScreenName();
                     accountimgURL = tweet.getAccountimgURL();
                     tweetimgURL =tweet.getTweetimgURL();
+                    tweetID = tweet.getTweetId();
+                    
                     break;
                 }
             }

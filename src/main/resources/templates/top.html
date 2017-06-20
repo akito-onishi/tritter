@@ -94,7 +94,10 @@
 								</form>
 							</div>
 							<div class="text">
-								<span th:text="${tweet.rt}"></span>
+                              
+								<span th:text="${tweet.tweetId}==${tweetID}? ${rt}:${tweet.rt}"></span>
+							
+								
 							</div>
 
 							<div class="button">
@@ -106,7 +109,7 @@
 								</form>
 							</div>
 
-							<span th:text="${tweet.fav}"></span>
+							<span th:text="${tweet.tweetId}==${tweetID}? ${fav}:${tweet.fav}"></span>
 
 						</div>
 					</a>

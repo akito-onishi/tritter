@@ -15,6 +15,7 @@ public class GetTweet {
             System.out.println(statuses.get(0).getCreatedAt());
             System.out.println(statuses.get(0).getInReplyToScreenName());
             System.out.println(statuses.get(0).getInReplyToUserId());
+            System.out.println(statuses.get(0).getUser());
           //ついーとしてみる
            // twitter.updateStatus("st");
             System.out.println("一つ目のツイートを表示: "+statuses.get(0).getText());

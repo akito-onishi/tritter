@@ -8,10 +8,14 @@ public class Tweets {
     String tweetimgURL;
     int fav;// ふぁぼ初期値
     int rt;// りつい初期値
+    int tweetCount;
+    int followersCount;
+    int friendsCount;
     String tweetId;
     String tweetTime;
     
-    public Tweets(String accountimgURL,String accountName, String screenName,String tweetContents, String tweetimgURL, int fav, int rt, String tweetId,String tweetTime){
+    public Tweets(String accountimgURL,String accountName, String screenName,String tweetContents, String tweetimgURL, int fav, int rt, int tweetCount,
+                  int followersCount,int friendsCount,String tweetId,String tweetTime){
 
         this.accountimgURL = accountimgURL;
         this.accountName = accountName;
@@ -20,8 +24,12 @@ public class Tweets {
         this.tweetimgURL = tweetimgURL;
         this.fav = fav;
         this.rt = rt;
+        this.tweetCount = tweetCount;
+        this.followersCount = followersCount;
+        this.friendsCount = friendsCount;
         this.tweetId = tweetId;
         this.tweetTime = tweetTime;
+        
 
     }
     
@@ -51,6 +59,18 @@ public class Tweets {
     
     public int getRt(){
         return this.rt;
+    }
+    
+    public int getTweetCount(){
+        return this.tweetCount;
+    }
+    
+    public int getFollowerCount(){
+        return this.followersCount;
+    }
+    
+    public int getFriendsCount(){
+        return this.friendsCount;
     }
     
     public String getTweetId(){

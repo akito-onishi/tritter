@@ -22,8 +22,10 @@ public class MainController {
     int defaultRt = 0;// りつい初期値
     int Fav;
     int Rt;
-    int tweetNum = 0;
     int notificationCount;//通知の数値をカウント
+    int tweetCount;
+    int followersCount;
+    int friendsCount;
     boolean favButtonbool=false;// ふぁぼボタンを押したかどうか
     boolean rtButtonbool=false;//りついボタンを押したかどうか
     String defaultFavIcon = "♡";
@@ -69,7 +71,9 @@ public class MainController {
         model.addAttribute("accountimgURL",accountimgURL);
         model.addAttribute("tweetimgURL",tweetimgURL);
         model.addAttribute("tweets", tweets);
-        model.addAttribute("tweetNum", tweetNum);
+        model.addAttribute("tweetCount",tweetCount);
+        model.addAttribute("followersCount", followersCount);
+        model.addAttribute("friendsCount", friendsCount);
         model.addAttribute("tweetID",tweetID);
         model.addAttribute("tweetTime",tweetTime);
         model.addAttribute("notificationCount",notificationCount);
@@ -176,7 +180,6 @@ public class MainController {
            Twitter twitter = new TwitterFactory().getInstance();
            List<Status> statuses = twitter.getHomeTimeline();//TLのリスト
            
-           tweetNum = statuses.size();
            for(int i=0;i<statuses.size();i++){
                MediaEntity[] mediaEntitys = statuses.get(i).getMediaEntities();
                if (mediaEntitys.length == 0) {//ツイートに画像がない場合 リストに空の値を追加
@@ -189,8 +192,9 @@ public class MainController {
                
                tweets.add(new Tweets(statuses.get(i).getUser().getProfileImageURL(),statuses.get(i).getUser().getName(),
                        statuses.get(i).getUser().getScreenName(),statuses.get(i).getText(),tweetimgURLList.get(i),
-                       statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount(),String.valueOf(statuses.get(i).getId()),
-                       String.valueOf(statuses.get(i).getCreatedAt())));
+                       statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount(),statuses.get(i).getUser().getStatusesCount(),
+                       statuses.get(i).getUser().getFollowersCount(),statuses.get(i).getUser().getFriendsCount(),
+                       String.valueOf(statuses.get(i).getId()),String.valueOf(statuses.get(i).getCreatedAt())));
                
            }
 
@@ -228,6 +232,9 @@ public class MainController {
                     tweetimgURL =tweet.getTweetimgURL();
                     tweetID = tweet.getTweetId();
                     tweetTime = tweet.getTweetTime();
+                    tweetCount = tweet.getTweetCount();
+                    followersCount = tweet.getFollowerCount();
+                    friendsCount = tweet.friendsCount;
                     break;
                 }
             }

@@ -43,7 +43,6 @@
             </form>
 			<!--th:each-->
 			<div th:each="tweet : ${tweets}">
-			
 				<div class="TLtweet">
                    <div th:id ="${tweet.tweetId}">
 					<!--タイムラインの一つのツイート-->
@@ -118,16 +117,18 @@
 			</div>
 			</div>
 		</div>
+		 <div th:each="tweetBox : ${tweet}">
         <div class= "Notification">
         <!--通知エリア-->
-            <p>ツイート　<span th:text="${tweetCount}"></span>　　フォロー　<span th:text="${friendsCount}"></span>　　フォロワー　<span th:text="${followersCount}"></span>　　通知　🔔 <span th:text="${notificationCount}"></span></p>
+            <p>ツイート　<span th:text="${tweetBox.tweetCount}"></span>　　フォロー　<span th:text="${tweetBox.friendsCount}"></span>　　フォロワー　<span th:text="${tweetBox.followersCount}"></span>　　通知　🔔 <span th:text="${notificationCount}"></span></p>
+        </div>
         </div>
 		<div class="Tweet">
 			<!--ツイートのBox-->
-
+            <div th:each="tweetBox : ${tweet}">
 			<div id="acountimage">
 				<!--アイコン表示-->
-				<img th:src="${accountimgURL}" alt="画像" id="acountimage" />
+				<img th:src="${tweetBox.accountimgURL}" alt="画像" id="acountimage" />
 			</div>
 
 			<div id="followimage">
@@ -136,37 +137,37 @@
 			</div>
 
 			<div id="AccountName">
-				<h2><span th:text="${accountName}">
+				<h2><span th:text="${tweetBox.accountName}">
 				</span></h2>
-				<p>@<span th:text="${screenName}"></span></p>
+				<p>@<span th:text="${tweetBox.screenName}"></span></p>
 			</div>
 
 
 			<div class="TweetContents">
 				<!--ツイート内容表示-->
-                <span th:text="${tweetContents}"></span>
+                <span th:text="${tweetBox.tweetContents}"></span>
 			</div>
             <p></p>
 			<div id="Tweetimg">
 				<!--ツイート写真があれば表示-->
-				<img th:src="${tweetimgURL}" alt="" id="Tweetimg" />
+				<img th:src="${tweetBox.tweetimgURL}" alt="" id="Tweetimg" />
 			</div>
 
 			<div id="RT">
 				<!--RT表示-->
-				<h3><font color="#33ccff"><span th:text="${Rt}"></span></font></h3>
+				<h3><font color="#33ccff"><span th:text="${tweetBox.Rt}"></span></font></h3>
 				<p>リツイート</p>
 			</div>
 
 			<div id="Good">
 				<!--いいね表示-->
-				<h3><font color="#33ccff"><span th:text="${Fav}"></span></font></h3>
+				<h3><font color="#33ccff"><span th:text="${tweetBox.Fav}"></span></font></h3>
 				<p>いいね</p>
 			</div>
 
 			<div id="Day">
 				<!--日にち表示-->
-				<span th:text="${tweetTime}"></span>
+				<span th:text="${tweetBox.tweetTime}"></span>
 			</div>
 
 			<div class="Rep">
@@ -184,7 +185,7 @@
 					</form>
 				</div>
 				<div class="text">
-					<span th:text="${Rt}"></span>
+					<span th:text="${tweetBox.Rt}"></span>
 				</div>
 
 
@@ -198,10 +199,10 @@
 					</form>
 				</div>
 
-				<span th:text="${Fav}"></span>
+				<span th:text="${tweetBox.Fav}"></span>
 
 			</div>
-
+         </div>
 		</div>
 		<div class="ButtonArea">
 			<!--ボタン配置エリア-->
@@ -221,7 +222,7 @@
 			</form>
 
 		</div>
-
+       
 	</div>
 
 </body>

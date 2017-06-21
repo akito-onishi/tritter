@@ -1,5 +1,8 @@
 package com.example.tritter;
 
+import lombok.Data;
+
+@Data
 public class Tweets {
     String accountName;
     String tweetContents;
@@ -32,52 +35,5 @@ public class Tweets {
         
 
     }
-    
-    public String getAccountimgURL(){
-        return this.accountimgURL;
-    }
-    
-    public String getAccountName(){
-        return this.accountName;
-    }
-    
-    public String getScreenName(){
-        return this.screenName;
-    }
-    
-    public String getTweetContents(){
-        return this.tweetContents;
-    }
-    
-    public String getTweetimgURL(){
-        return this.tweetimgURL;
-    }
-    
-    public int getFav(){
-        return this.fav;
-    }
-    
-    public int getRt(){
-        return this.rt;
-    }
-    
-    public int getTweetCount(){
-        return this.tweetCount;
-    }
-    
-    public int getFollowerCount(){
-        return this.followersCount;
-    }
-    
-    public int getFriendsCount(){
-        return this.friendsCount;
-    }
-    
-    public String getTweetId(){
-        return this.tweetId;
-    }
-    
-    public String getTweetTime(){
-        return this.tweetTime;
-    }
+ 
 }

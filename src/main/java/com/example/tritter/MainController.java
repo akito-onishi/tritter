@@ -3,6 +3,7 @@ package com.example.tritter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,8 +21,8 @@ public class MainController {
 
     int defaultFav = 0;// ふぁぼ初期値
     int defaultRt = 0;// りつい初期値
-    int Fav;
-    int Rt;
+    int Fav = 0;// ふぁぼ初期値
+    int Rt = 0;// りつい初期値
     int notificationCount;//通知の数値をカウント
     int tweetCount;
     int followersCount;
@@ -42,6 +43,7 @@ public class MainController {
     List<Tweets> tweets = new ArrayList<>();//ツイートのリスト
     List<String> tweetimgURLList = new ArrayList<String>();
     @Autowired
+    private JdbcTemplate jdbc;
     private TritterDao tritterDao;
     
     @GetMapping("/test")
@@ -74,7 +76,7 @@ public class MainController {
         model.addAttribute("tweetCount",tweetCount);
         model.addAttribute("followersCount", followersCount);
         model.addAttribute("friendsCount", friendsCount);
-        model.addAttribute("tweetID",tweetID);
+//        model.addAttribute("tweetID",tweetID);
         model.addAttribute("tweetTime",tweetTime);
         model.addAttribute("notificationCount",notificationCount);
         return "top";
@@ -95,13 +97,16 @@ public class MainController {
      */
     @PostMapping("/rtFavInput")
     public String rtFavInput(RtFavInputForm form,RedirectAttributes attr) {// りついふぁぼ変更処理
-        Fav = form.getFav();// 変数に代入
-        Rt = form.getRt();// 変数に代入
+        
+        jdbc.update("UPDATE Tweet SET Fav =  ? WHERE tweetID = ?",form.getFav(),form.getTweetId());
+        jdbc.update("UPDATE Tweet SET Rt = ? WHERE tweetID = ?",form.getRt(),form.getTweetId());
+        attr.addFlashAttribute("tweetId",form.getTweetId());
+        attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("Fav"));
+        attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("Rt"));
         favButtonbool=false;//初期化
         rtButtonbool=false;//初期化
-        
         notificationCount = Fav + Rt;
-        
+       
         return "redirect:/top";
     }
 
@@ -195,7 +200,7 @@ public class MainController {
                        statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount(),statuses.get(i).getUser().getStatusesCount(),
                        statuses.get(i).getUser().getFollowersCount(),statuses.get(i).getUser().getFriendsCount(),
                        String.valueOf(statuses.get(i).getId()),String.valueOf(statuses.get(i).getCreatedAt())));
-               
+                       jdbc.update("INSERT INTO Tweet VALUES(?,?,?,?)",i,String.valueOf(statuses.get(i).getId()),statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount());
            }
 
        } catch (TwitterException te) {
@@ -216,29 +221,47 @@ public class MainController {
    @PostMapping("/setTweet")
    public String setTweet(RedirectAttributes attr,String tweetId){
 
+       
+       List<Map<String, Object>> tweetLists = jdbc.queryForList("SELECT * FROM Tweet ");
+       
+       attr.addFlashAttribute("tweetLists",tweetLists);
+       
+       
+       attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Fav"));
+       attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Rt"));
+       attr.addFlashAttribute("tweetId",tweetId);
+
+       System.out.println(jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Fav"));
             for(Tweets tweet: tweets){
 
                 if(tweetId.equals(tweet.getTweetId())){
-                    
-                    defaultFav = tweet.getFav();
-                    defaultRt = tweet.getRt();
-                    Fav = defaultFav;
-                    Rt = defaultRt;
+//                    attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Fav"));
+//                    defaultFav = tweet.getFav();
+//                    defaultRt = tweet.getRt();
+//                    Fav = defaultFav;
+//                    Rt = defaultRt;
                     notificationCount = 0;
                     accountName = tweet.getAccountName();
                     tweetContents = tweet.getTweetContents();
                     screenName = tweet.getScreenName();
                     accountimgURL = tweet.getAccountimgURL();
                     tweetimgURL =tweet.getTweetimgURL();
-                    tweetID = tweet.getTweetId();
+//                    tweetID = tweet.getTweetId();
                     tweetTime = tweet.getTweetTime();
                     tweetCount = tweet.getTweetCount();
-                    followersCount = tweet.getFollowerCount();
+                    followersCount = tweet.getFollowersCount();
                     friendsCount = tweet.friendsCount;
                     break;
                 }
             }
 
+       return "redirect:/top";
+   }
+   
+   @PostMapping("/Flaming")
+   public String Flaming(RedirectAttributes attr){
+       
+       
        return "redirect:/top";
    }
    

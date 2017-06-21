@@ -6,9 +6,10 @@ import lombok.Data;
 
 @Data
 public class RtFavInputForm {
-    @Min(0)
-    private int fav;
-    private int rt;
+
+    private int Fav;
+    private int Rt;
+    private String tweetId;
     
 
 }

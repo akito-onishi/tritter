@@ -43,6 +43,7 @@
             </form>
 			<!--th:each-->
 			<div th:each="tweet : ${tweets}">
+			
 				<div class="TLtweet">
                    <div th:id ="${tweet.tweetId}">
 					<!--タイムラインの一つのツイート-->
@@ -61,7 +62,7 @@
 							</p>
 						</div>
 
-
+                        <!-- ツイートIDを送信 -->
                         <form method="post" th:action="@{/setTweet}">
                           <input name="tweetId" type="hidden" th:value="${tweet.tweetId}" />
                           <button type="submit">表示</button>
@@ -95,7 +96,7 @@
 							</div>
 							<div class="text">
                               
-								<span th:text="${tweet.tweetId}==${tweetID}? ${rt}:${tweet.rt}"></span>
+								<span th:text="${tweet.tweetId}==${tweetId}? ${Rt}:${tweet.rt}"></span>
 							
 								
 							</div>
@@ -108,13 +109,13 @@
 									</button>
 								</form>
 							</div>
-
-							<span th:text="${tweet.tweetId}==${tweetID}? ${fav}:${tweet.fav}"></span>
-
+							
+							<span th:text="${tweet.tweetId}==${tweetId}? ${Fav}:${tweet.fav}"></span>
+                            
 						</div>
 					</a>
 				</div>
-               </div>
+			</div>
 			</div>
 		</div>
         <div class= "Notification">
@@ -153,13 +154,13 @@
 
 			<div id="RT">
 				<!--RT表示-->
-				<h3><font color="#33ccff"><span th:text="${rt}"></span></font></h3>
+				<h3><font color="#33ccff"><span th:text="${Rt}"></span></font></h3>
 				<p>リツイート</p>
 			</div>
 
 			<div id="Good">
 				<!--いいね表示-->
-				<h3><font color="#33ccff"><span th:text="${fav}"></span></font></h3>
+				<h3><font color="#33ccff"><span th:text="${Fav}"></span></font></h3>
 				<p>いいね</p>
 			</div>
 
@@ -183,7 +184,7 @@
 					</form>
 				</div>
 				<div class="text">
-					<span th:text="${rt}"></span>
+					<span th:text="${Rt}"></span>
 				</div>
 
 
@@ -197,7 +198,7 @@
 					</form>
 				</div>
 
-				<span th:text="${fav}"></span>
+				<span th:text="${Fav}"></span>
 
 			</div>
 
@@ -208,11 +209,11 @@
 			<p>ボタンを配置</p>
 			
 			<form method="post" th:action="@{/rtFavInput}">
-
+                <input name="tweetId" type="hidden" th:value="${tweetId}" />
 				<button type="enjo">炎上</button>
 				RT数変更<input type="number" name="rt" max="9999999" min="0"
-					th:value="${rt}" /> ふぁぼ数変更<input type="number" name="fav"
-					max="9999999" min="0" th:value="${fav}" />
+					th:value="${Rt}" /> ふぁぼ数変更<input type="number" name="fav"
+					max="9999999" min="0" th:value="${Fav}" />
 
 			</form>
 			<form method="post" th:action="@{/clear}">

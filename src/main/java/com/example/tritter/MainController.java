@@ -27,6 +27,7 @@ public class MainController {
     int tweetCount;
     int followersCount;
     int friendsCount;
+    int apiLimit =0;
     boolean favButtonbool=false;// ふぁぼボタンを押したかどうか
     boolean rtButtonbool=false;//りついボタンを押したかどうか
     String defaultFavIcon = "♡";
@@ -40,6 +41,10 @@ public class MainController {
     String accountimgURL = null;
     String tweetimgURL = null;
     String tweetTime;
+    
+    
+    
+    
 //    List<Tweets> tweets = new ArrayList<>();//ツイートのリスト
     List<String> tweetimgURLList = new ArrayList<String>();
     @Autowired
@@ -98,6 +103,12 @@ public class MainController {
     @PostMapping("/rtFavInput")
     public String rtFavInput(RtFavInputForm form,RedirectAttributes attr) {// りついふぁぼ変更処理
 
+        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id");
+        
+        attr.addFlashAttribute("tweets",tweets);
+        
+        List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId());
+        attr.addFlashAttribute("tweet",tweet);
         jdbc.update("UPDATE Tweet SET Fav =  ? WHERE tweetID = ?",form.getFav(),form.getTweetId());
         jdbc.update("UPDATE Tweet SET Rt = ? WHERE tweetID = ?",form.getRt(),form.getTweetId());
         attr.addFlashAttribute("tweetId",form.getTweetId());
@@ -233,8 +244,20 @@ public class MainController {
    @PostMapping("/setTweet")
    public String setTweet(RedirectAttributes attr,String tweetId){
 
+//     
+//       if(apiLimit == 0){
+//           apiLimit+=1;
+//           getTweet(attr);
+//       }else if(apiLimit == 7){
+//           getTweet(attr);
+//           apiLimit =0;
+//       }else{
+//           apiLimit++;
+//       }
+//       
+//       
        
-       List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ");
+       List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id");
        
        attr.addFlashAttribute("tweets",tweets);
        
@@ -242,9 +265,9 @@ public class MainController {
        attr.addFlashAttribute("tweet",tweet);
        
 //       attr.addFlashAttribute("accountimgURL",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Fav"));
-//       attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Fav"));
-//       attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Rt"));
-//       attr.addFlashAttribute("tweetId",tweetId);
+       attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Fav"));
+       attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Rt"));
+       attr.addFlashAttribute("tweetId",tweetId);
 
        System.out.println(jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Fav"));
 //            for(Tweets tweet: tweets){

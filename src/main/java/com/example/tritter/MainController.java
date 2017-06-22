@@ -102,21 +102,18 @@ public class MainController {
      */
     @PostMapping("/rtFavInput")
     public String rtFavInput(RtFavInputForm form,RedirectAttributes attr) {// りついふぁぼ変更処理
-
-        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id");
-        
-        attr.addFlashAttribute("tweets",tweets);
-        
-        List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId());
-        attr.addFlashAttribute("tweet",tweet);
         jdbc.update("UPDATE Tweet SET Fav =  ? WHERE tweetID = ?",form.getFav(),form.getTweetId());
         jdbc.update("UPDATE Tweet SET Rt = ? WHERE tweetID = ?",form.getRt(),form.getTweetId());
+        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id");
+        List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId());
+        attr.addFlashAttribute("tweets",tweets);
+        attr.addFlashAttribute("tweet",tweet);
         attr.addFlashAttribute("tweetId",form.getTweetId());
         attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("Fav"));
         attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("Rt"));
         favButtonbool=false;//初期化
         rtButtonbool=false;//初期化
-        notificationCount = Fav + Rt;
+        notificationCount = form.getFav() + form.getRt();
        
         return "redirect:/top";
     }
@@ -207,13 +204,6 @@ public class MainController {
                    tweetimgURLList.add(m.getMediaURL());
                    
                }
-               
-//               tweets.add(new Tweets(statuses.get(i).getUser().getProfileImageURL(),statuses.get(i).getUser().getName(),
-//                       statuses.get(i).getUser().getScreenName(),statuses.get(i).getText(),tweetimgURLList.get(i),
-//                       statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount(),statuses.get(i).getUser().getStatusesCount(),
-//                       statuses.get(i).getUser().getFollowersCount(),statuses.get(i).getUser().getFriendsCount(),
-//                       String.valueOf(statuses.get(i).getId()),String.valueOf(statuses.get(i).getCreatedAt())));
-//                  
                jdbc.update("INSERT INTO Tweet VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
                                i,statuses.get(i).getUser().getProfileImageURL(),statuses.get(i).getUser().getName(),
                                statuses.get(i).getUser().getScreenName(),statuses.get(i).getText(),tweetimgURLList.get(i),
@@ -263,35 +253,11 @@ public class MainController {
        
        List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId);
        attr.addFlashAttribute("tweet",tweet);
-       
-//       attr.addFlashAttribute("accountimgURL",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Fav"));
        attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Fav"));
        attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Rt"));
        attr.addFlashAttribute("tweetId",tweetId);
 
        System.out.println(jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Fav"));
-//            for(Tweets tweet: tweets){
-//
-//                if(tweetId.equals(tweet.getTweetId())){
-////                    attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Fav"));
-////                    defaultFav = tweet.getFav();
-////                    defaultRt = tweet.getRt();
-////                    Fav = defaultFav;
-////                    Rt = defaultRt;
-//                    notificationCount = 0;
-//                    accountName = tweet.getAccountName();
-//                    tweetContents = tweet.getTweetContents();
-//                    screenName = tweet.getScreenName();
-//                    accountimgURL = tweet.getAccountimgURL();
-//                    tweetimgURL =tweet.getTweetimgURL();
-////                    tweetID = tweet.getTweetId();
-//                    tweetTime = tweet.getTweetTime();
-//                    tweetCount = tweet.getTweetCount();
-//                    followersCount = tweet.getFollowersCount();
-//                    friendsCount = tweet.friendsCount;
-//                    break;
-//                }
-//            }
 
        return "redirect:/top";
    }

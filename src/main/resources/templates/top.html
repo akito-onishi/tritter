@@ -208,14 +208,14 @@
 			<!--ボタン配置エリア-->
 			<h2>ButtonArea</h2>
 			<p>ボタンを配置</p>
-			
+			<button type="enjo">炎上</button>
 			<form method="post" th:action="@{/rtFavInput}">
                 <input name="tweetId" type="hidden" th:value="${tweetId}" />
-				<button type="enjo">炎上</button>
 				RT数変更<input type="number" name="rt" max="9999999" min="0"
 					th:value="${Rt}" /> ふぁぼ数変更<input type="number" name="fav"
 					max="9999999" min="0" th:value="${Fav}" />
-
+					
+					<button type="submit">変更</button>
 			</form>
 			<form method="post" th:action="@{/clear}">
 				<button type="submit">クリア</button>

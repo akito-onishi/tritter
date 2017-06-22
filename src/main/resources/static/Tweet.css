@@ -26,8 +26,9 @@
 #Tweetimg{
 
      max-width:650px; 
-     max-height:650px;
+     max-height:500px;
      height: auto;
+     width: auto;
      margin:0 auto;
      text-align: center;
 

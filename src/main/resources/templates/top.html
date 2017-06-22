@@ -17,6 +17,35 @@
 <!--TLのレイアウト-->
 <link rel="StyleSheet" type="text/css" href="ButtonArea.css" />
 <!--ButtonAreaのレイアウト-->
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script>
+$(function(){
+    var countElm = $('.count'),
+    countSpeed = 100;
+ 
+    countElm.each(function(){
+        var self = $(this),
+        countMax = self.attr('data-num'),
+        thisCount = self.text(),
+        countTimer;
+ 
+        function timer(){
+            countTimer = setInterval(function(){
+                var countNext = thisCount++;
+                self.text(countNext);
+ 
+                if(countNext == countMax){
+                    clearInterval(countTimer);
+                }
+            },countSpeed);
+        }
+        timer();
+    });
+ 
+});
+</script>
+
 </head>
 
 <body>
@@ -38,9 +67,7 @@
             
 
 			<p>タイムライン情報を表示</p>
-             <form method="post" th:action="@{/getTweet}">
-            <button type="submit" name="TLreadButton">タイムライン読み込み</button>
-            </form>
+
 			<!--th:each-->
 			<div th:each="tweet : ${tweets}">
 				<div class="TLtweet">
@@ -90,7 +117,7 @@
 									<!-- りついぼたん押したときの処理 -->
 									<input name="tweetId" type="hidden" th:value="${tweetId}" />
 									　　　　　<button type="submit" name="rtButton">
-										<span th:text="${rtIcon}"></span>
+										<span th:text="${tweet.rtIcon}"></span>
 									</button>
 								</form>
 							</div>
@@ -106,7 +133,7 @@
 									<!-- ふぁぼぼたん押したときの処理 -->
 									<input name="tweetId" type="hidden" th:value="${tweetId}" />
 									　　　　　<button type="submit" name="tlFavButton">
-										<span th:text="${favIcon}"></span>
+										<span th:text="${tweet.favIcon}"></span>
 									</button>
 								</form>
 							</div>
@@ -178,7 +205,7 @@
 						<!-- りついぼたん押したときの処理 -->
 						<input name="tweetId" type="hidden" th:value="${tweetId}" />
 						　　　　　<button type="submit" name="rtButton">
-							<span th:text="${rtIcon}"></span>
+							<span th:text="${tweetBox.rtIcon}"></span>
 						</button>
 
 					</form>
@@ -193,13 +220,13 @@
 						<!-- ふぁぼぼたん押したときの処理 -->
 						<input name="tweetId" type="hidden" th:value="${tweetId}" />
 						　　　　　<button type="submit" name="favButton">
-							<span th:text="${favIcon}"></span>
+							<span th:text="${tweetBox.favIcon}"></span>
 						</button>
 
 					</form>
 				</div>
 
-				<span th:text="${tweetBox.Fav}"></span>
+				<span th:class="${count}" data-num="10000"><span th:text="${tweetBox.Fav}"></span></span>
 
 			</div>
          </div>
@@ -208,7 +235,10 @@
 			<!--ボタン配置エリア-->
 			<h2>ButtonArea</h2>
 			<p>ボタンを配置</p>
-			<button type="enjo">炎上</button>
+			<form method="post" th:action="@{/Flaming}">
+			<input name="tweetId" type="hidden" th:value="${tweetId}" />
+			     <button type="submit">炎上</button>
+			</form>
 			<form method="post" th:action="@{/rtFavInput}">
                 <input name="tweetId" type="hidden" th:value="${tweetId}" />
 				RT数変更<input type="number" name="rt" max="9999999" min="0"
@@ -218,6 +248,7 @@
 					<button type="submit">変更</button>
 			</form>
 			<form method="post" th:action="@{/clear}">
+			    <input name="tweetId" type="hidden" th:value="${tweetId}" />
 				<button type="submit">クリア</button>
 			</form>
 

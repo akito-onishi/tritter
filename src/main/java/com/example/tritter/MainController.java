@@ -28,8 +28,6 @@ public class MainController {
     int followersCount;
     int friendsCount;
     int apiLimit =0;
-    boolean favButtonbool=false;// ふぁぼボタンを押したかどうか
-    boolean rtButtonbool=false;//りついボタンを押したかどうか
     String defaultFavIcon = "♡";
     String changeFavIcon = "❤";
     String defaultRtIcon = "🔁";
@@ -41,6 +39,7 @@ public class MainController {
     String accountimgURL = null;
     String tweetimgURL = null;
     String tweetTime;
+    String count = "count";
     
     
     
@@ -68,25 +67,47 @@ public class MainController {
     @GetMapping("/top") // 最初の状態
     public String top(Model model) {
 
-        model.addAttribute("fav", Fav);
-        model.addAttribute("rt", Rt);
-        model.addAttribute("favIcon", defaultFavIcon);
-        model.addAttribute("rtIcon", defaultRtIcon);
-        model.addAttribute("accountName",accountName);
-        model.addAttribute("tweetContents",tweetContents);
-        model.addAttribute("screenName",screenName);
-        model.addAttribute("accountimgURL",accountimgURL);
-        model.addAttribute("tweetimgURL",tweetimgURL);
-//        model.addAttribute("tweets", tweets);
-        model.addAttribute("tweetCount",tweetCount);
-        model.addAttribute("followersCount", followersCount);
-        model.addAttribute("friendsCount", friendsCount);
-//        model.addAttribute("tweetID",tweetID);
-        model.addAttribute("tweetTime",tweetTime);
+        if(apiLimit==0){
+            apiLimit +=1;
+        try {
+            Twitter twitter = new TwitterFactory().getInstance();
+            List<Status> statuses = twitter.getHomeTimeline();//TLのリスト
+            
+            
+            
+            for(int i=0;i<statuses.size();i++){
+                MediaEntity[] mediaEntitys = statuses.get(i).getMediaEntities();
+                if (mediaEntitys.length == 0) {//ツイートに画像がない場合 リストに空の値を追加
+                    tweetimgURLList.add("");
+                }
+                for(MediaEntity m:mediaEntitys){//ツイートに画像がある場合 画像のURLをリストに追加
+                    tweetimgURLList.add(m.getMediaURL());
+                    
+                }
+                jdbc.update("INSERT INTO Tweet VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                                i,statuses.get(i).getUser().getProfileImageURL(),statuses.get(i).getUser().getName(),
+                                statuses.get(i).getUser().getScreenName(),statuses.get(i).getText(),tweetimgURLList.get(i),
+                                statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount(),statuses.get(i).getUser().getStatusesCount(),
+                                statuses.get(i).getUser().getFollowersCount(),statuses.get(i).getUser().getFriendsCount(),
+                                String.valueOf(statuses.get(i).getId()),String.valueOf(statuses.get(i).getCreatedAt()),defaultFavIcon,defaultRtIcon);
+            }
+            
+            List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ");
+            
+            model.addAttribute("tweets",tweets);
+
+        } catch (TwitterException te) {
+            te.printStackTrace();
+            System.out.println("Failed to get timeline: " + te.getMessage());
+            System.exit(-1);
+        }
+        
+        }
+        
         model.addAttribute("notificationCount",notificationCount);
         return "top";
+        }
         
-    }
 
     /**
      * リツイート数とふぁぼ数を任意の値に変更する。
@@ -111,8 +132,6 @@ public class MainController {
         attr.addFlashAttribute("tweetId",form.getTweetId());
         attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("Fav"));
         attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("Rt"));
-        favButtonbool=false;//初期化
-        rtButtonbool=false;//初期化
         notificationCount = form.getFav() + form.getRt();
        
         return "redirect:/top";
@@ -132,6 +151,7 @@ public class MainController {
     public String favButton(RtFavInputForm form,RedirectAttributes attr) {// ふぁぼボタンを押したときの処理
         
         jdbc.update("UPDATE Tweet SET Fav = Fav+1 WHERE tweetID = ?",form.getTweetId());
+        jdbc.update("UPDATE Tweet SET FavIcon = ? WHERE tweetID = ?",changeFavIcon,form.getTweetId());
         List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id");
         List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId());
         attr.addFlashAttribute("tweets",tweets);
@@ -139,9 +159,9 @@ public class MainController {
         attr.addFlashAttribute("tweetId",form.getTweetId());
         attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("Fav"));
         attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("Rt"));
+        attr.addFlashAttribute("favIcon",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("favIcon"));
+        attr.addFlashAttribute("rtIcon",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("rtIcon"));
         notificationCount+=1;
-        defaultFavIcon = changeFavIcon;// 表示変更
-        favButtonbool=true;
 
         return "redirect:/top";
     }
@@ -158,6 +178,7 @@ public class MainController {
     @PostMapping("/rtButton")
     public String rtButton(RtFavInputForm form,RedirectAttributes attr) {// りついボタンを押したときの処理
         jdbc.update("UPDATE Tweet SET Rt = Rt+1 WHERE tweetID = ?",form.getTweetId());
+        jdbc.update("UPDATE Tweet SET RtIcon = ? WHERE tweetID = ?",changeRtIcon,form.getTweetId());
         List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id");
         List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId());
         attr.addFlashAttribute("tweets",tweets);
@@ -165,9 +186,9 @@ public class MainController {
         attr.addFlashAttribute("tweetId",form.getTweetId());
         attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("Fav"));
         attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("Rt"));
+        attr.addFlashAttribute("favIcon",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("favIcon"));
+        attr.addFlashAttribute("rtIcon",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("rtIcon"));
         notificationCount+=1;
-        defaultRtIcon = changeRtIcon;// 表示変更
-        rtButtonbool=true;
 
         return "redirect:/top";
     }
@@ -182,14 +203,21 @@ public class MainController {
      * @return 初期化したファボ数・リツイート数の変数を返却する。
      */
     @PostMapping("/clear")
-    public String Clear(RedirectAttributes attr){
-        Fav = defaultFav;
-        Rt = defaultRt;
+    public String Clear(RtFavInputForm form,RedirectAttributes attr){
+        jdbc.update("UPDATE Tweet SET Fav =  0 WHERE tweetID = ?",form.getTweetId());
+        jdbc.update("UPDATE Tweet SET Rt = 0 WHERE tweetID = ?",form.getTweetId());
+        jdbc.update("UPDATE Tweet SET FavIcon = ? WHERE tweetID = ?",defaultFavIcon,form.getTweetId());
+        jdbc.update("UPDATE Tweet SET RtIcon = ? WHERE tweetID = ?",defaultRtIcon,form.getTweetId());
+        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id");
+        List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId());
+        attr.addFlashAttribute("tweets",tweets);
+        attr.addFlashAttribute("tweet",tweet);
+        attr.addFlashAttribute("tweetId",form.getTweetId());
+        attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("Fav"));
+        attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("Rt"));
+        attr.addFlashAttribute("favIcon",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("favIcon"));
+        attr.addFlashAttribute("rtIcon",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("rtIcon"));
         notificationCount = 0;
-        defaultFavIcon = "♡";
-        defaultRtIcon = "🔁";
-        favButtonbool=false;//初期化
-        rtButtonbool=false;//初期化
         return "redirect:/top";
     }
     
@@ -202,43 +230,7 @@ public class MainController {
  * @param attr モデル
  * @return tweet情報が代入された各変数を返却する
  */
-   @PostMapping("/getTweet")
-   public String getTweet(RedirectAttributes attr){//ツイート取得メソッド
-       try {
-           Twitter twitter = new TwitterFactory().getInstance();
-           List<Status> statuses = twitter.getHomeTimeline();//TLのリスト
-           
-           
-           
-           for(int i=0;i<statuses.size();i++){
-               MediaEntity[] mediaEntitys = statuses.get(i).getMediaEntities();
-               if (mediaEntitys.length == 0) {//ツイートに画像がない場合 リストに空の値を追加
-                   tweetimgURLList.add("");
-               }
-               for(MediaEntity m:mediaEntitys){//ツイートに画像がある場合 画像のURLをリストに追加
-                   tweetimgURLList.add(m.getMediaURL());
-                   
-               }
-               jdbc.update("INSERT INTO Tweet VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                               i,statuses.get(i).getUser().getProfileImageURL(),statuses.get(i).getUser().getName(),
-                               statuses.get(i).getUser().getScreenName(),statuses.get(i).getText(),tweetimgURLList.get(i),
-                               statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount(),statuses.get(i).getUser().getStatusesCount(),
-                               statuses.get(i).getUser().getFollowersCount(),statuses.get(i).getUser().getFriendsCount(),
-                               String.valueOf(statuses.get(i).getId()),String.valueOf(statuses.get(i).getCreatedAt()));
-           }
-           
-           List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ");
-           
-           attr.addFlashAttribute("tweets",tweets);
 
-       } catch (TwitterException te) {
-           te.printStackTrace();
-           System.out.println("Failed to get timeline: " + te.getMessage());
-           System.exit(-1);
-       }
-
-       return "redirect:/top";
-   }
 /**
  * ユーザが選択したツイートのIDと一致するIDを持つツイート情報を表示する。
  * 
@@ -271,10 +263,18 @@ public class MainController {
        attr.addFlashAttribute("tweetId",tweetId);
        return "redirect:/top";
    }
-   
+ 
    @PostMapping("/Flaming")
-   public String Flaming(RedirectAttributes attr){
-       
+   public String Flaming(RedirectAttributes attr,String tweetId){
+
+       List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id");
+       List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId);
+       attr.addFlashAttribute("tweets",tweets);
+       attr.addFlashAttribute("tweet",tweet);
+       attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Fav"));
+       attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Rt"));
+       attr.addFlashAttribute("tweetId",tweetId);
+       attr.addFlashAttribute("count", count);
        
        return "redirect:/top";
    }

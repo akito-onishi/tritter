@@ -181,13 +181,13 @@ $(function(){
 			<div id="RT">
 				<!--RT表示-->
 				<h3><font color="#33ccff"><span th:text="${tweetBox.Rt}"></span></font></h3>
-				<p>リツイート</p>
+				<span>リツイート</span>
 			</div>
 
 			<div id="Good">
 				<!--いいね表示-->
-				<h3><font color="#33ccff"><span th:text="${tweetBox.Fav}"></span></font></h3>
-				<p>いいね</p>
+				<span><h3><font color="#33ccff"><span th:text="${tweetBox.Fav}"></span></font></h3></span>
+				<span>いいね</span>
 			</div>
 
 			<div id="Day">
@@ -234,7 +234,7 @@ $(function(){
 		<div class="ButtonArea">
 			<!--ボタン配置エリア-->
 			<h2>ButtonArea</h2>
-			<p>ボタンを配置</p>
+			<span>ボタンを配置</span>
 			<form method="post" th:action="@{/Flaming}">
 			<input name="tweetId" type="hidden" th:value="${tweetId}" />
 			     <button type="submit">炎上</button>

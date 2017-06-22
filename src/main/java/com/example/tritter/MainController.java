@@ -76,6 +76,7 @@ public class MainController {
             
             
             for(int i=0;i<statuses.size();i++){
+                int a = statuses.size() -i-1;
                 MediaEntity[] mediaEntitys = statuses.get(i).getMediaEntities();
                 if (mediaEntitys.length == 0) {//ツイートに画像がない場合 リストに空の値を追加
                     tweetimgURLList.add("");
@@ -85,14 +86,14 @@ public class MainController {
                     
                 }
                 jdbc.update("INSERT INTO Tweet VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                                i,statuses.get(i).getUser().getProfileImageURL(),statuses.get(i).getUser().getName(),
+                                a,statuses.get(i).getUser().getProfileImageURL(),statuses.get(i).getUser().getName(),
                                 statuses.get(i).getUser().getScreenName(),statuses.get(i).getText(),tweetimgURLList.get(i),
                                 statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount(),statuses.get(i).getUser().getStatusesCount(),
                                 statuses.get(i).getUser().getFollowersCount(),statuses.get(i).getUser().getFriendsCount(),
                                 String.valueOf(statuses.get(i).getId()),String.valueOf(statuses.get(i).getCreatedAt()),defaultFavIcon,defaultRtIcon);
             }
             
-            List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ");
+            List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id DESC");
             
             model.addAttribute("tweets",tweets);
 
@@ -102,6 +103,55 @@ public class MainController {
             System.exit(-1);
         }
         
+        }else if (apiLimit <10){
+            
+            apiLimit +=1;
+//            jdbc.update("DELETE FROM TWEET");
+            
+            try {
+                Twitter twitter = new TwitterFactory().getInstance();
+                List<Status> statuses = twitter.getHomeTimeline();//TLのリスト
+                
+                
+                
+                for(int i=0;i<statuses.size();i++){
+                    MediaEntity[] mediaEntitys = statuses.get(i).getMediaEntities();
+                    if (mediaEntitys.length == 0) {//ツイートに画像がない場合 リストに空の値を追加
+                        tweetimgURLList.add("");
+                    }
+                    for(MediaEntity m:mediaEntitys){//ツイートに画像がある場合 画像のURLをリストに追加
+                        tweetimgURLList.add(m.getMediaURL());
+                        
+                    }
+                    System.out.println(jdbc.queryForList("SELECT * FROM TWEET").size());
+                    //for(int j=0; j<statuses.size();j++){
+                    for(int j=0;j<jdbc.queryForList("SELECT * FROM TWEET").size();j++){
+
+                     
+                     if(jdbc.queryForList("SELECT * FROM TWEET WHERE id = ?",j).get(0).get("tweetID").equals(String.valueOf(statuses.get(i).getId()))){
+                     break;
+                     }else if (j==jdbc.queryForList("SELECT * FROM TWEET").size()-1){
+                         jdbc.update("INSERT INTO TWEET VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                         j+1,statuses.get(i).getUser().getProfileImageURL(),statuses.get(i).getUser().getName(),
+                         statuses.get(i).getUser().getScreenName(),statuses.get(i).getText(),tweetimgURLList.get(i),
+                         statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount(),statuses.get(i).getUser().getStatusesCount(),
+                         statuses.get(i).getUser().getFollowersCount(),statuses.get(i).getUser().getFriendsCount(),
+                         String.valueOf(statuses.get(i).getId()),String.valueOf(statuses.get(i).getCreatedAt()),defaultFavIcon,defaultRtIcon);
+                         break;
+                     }
+                    }
+                }
+                
+                List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id DESC");
+                
+                model.addAttribute("tweets",tweets);
+
+            } catch (TwitterException te) {
+                te.printStackTrace();
+                System.out.println("Failed to get timeline: " + te.getMessage());
+                System.exit(-1);
+            }
+            
         }
         
         model.addAttribute("notificationCount",notificationCount);
@@ -125,7 +175,7 @@ public class MainController {
     public String rtFavInput(RtFavInputForm form,RedirectAttributes attr) {// りついふぁぼ変更処理
         jdbc.update("UPDATE Tweet SET Fav =  ? WHERE tweetID = ?",form.getFav(),form.getTweetId());
         jdbc.update("UPDATE Tweet SET Rt = ? WHERE tweetID = ?",form.getRt(),form.getTweetId());
-        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id");
+        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id DESC");
         List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId());
         attr.addFlashAttribute("tweets",tweets);
         attr.addFlashAttribute("tweet",tweet);
@@ -152,7 +202,7 @@ public class MainController {
         
         jdbc.update("UPDATE Tweet SET Fav = Fav+1 WHERE tweetID = ?",form.getTweetId());
         jdbc.update("UPDATE Tweet SET FavIcon = ? WHERE tweetID = ?",changeFavIcon,form.getTweetId());
-        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id");
+        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id DESC");
         List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId());
         attr.addFlashAttribute("tweets",tweets);
         attr.addFlashAttribute("tweet",tweet);
@@ -179,7 +229,7 @@ public class MainController {
     public String rtButton(RtFavInputForm form,RedirectAttributes attr) {// りついボタンを押したときの処理
         jdbc.update("UPDATE Tweet SET Rt = Rt+1 WHERE tweetID = ?",form.getTweetId());
         jdbc.update("UPDATE Tweet SET RtIcon = ? WHERE tweetID = ?",changeRtIcon,form.getTweetId());
-        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id");
+        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id DESC");
         List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId());
         attr.addFlashAttribute("tweets",tweets);
         attr.addFlashAttribute("tweet",tweet);
@@ -208,7 +258,7 @@ public class MainController {
         jdbc.update("UPDATE Tweet SET Rt = 0 WHERE tweetID = ?",form.getTweetId());
         jdbc.update("UPDATE Tweet SET FavIcon = ? WHERE tweetID = ?",defaultFavIcon,form.getTweetId());
         jdbc.update("UPDATE Tweet SET RtIcon = ? WHERE tweetID = ?",defaultRtIcon,form.getTweetId());
-        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id");
+        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id DESC");
         List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId());
         attr.addFlashAttribute("tweets",tweets);
         attr.addFlashAttribute("tweet",tweet);
@@ -254,7 +304,7 @@ public class MainController {
 //       
 //       
        notificationCount = 0;
-       List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id");
+       List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id DESC");
        List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId);
        attr.addFlashAttribute("tweets",tweets);
        attr.addFlashAttribute("tweet",tweet);
@@ -267,7 +317,7 @@ public class MainController {
    @PostMapping("/Flaming")
    public String Flaming(RedirectAttributes attr,String tweetId){
 
-       List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id");
+       List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id DESC");
        List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId);
        attr.addFlashAttribute("tweets",tweets);
        attr.addFlashAttribute("tweet",tweet);

@@ -88,6 +88,7 @@
 							<div class="button">
 								<form method="post" th:action="@{/rtButton}">
 									<!-- りついぼたん押したときの処理 -->
+									<input name="tweetId" type="hidden" th:value="${tweetId}" />
 									　　　　　<button type="submit" name="rtButton">
 										<span th:text="${rtIcon}"></span>
 									</button>
@@ -103,6 +104,7 @@
 							<div class="button">
 								<form method="post" th:action="@{/favButton}">
 									<!-- ふぁぼぼたん押したときの処理 -->
+									<input name="tweetId" type="hidden" th:value="${tweetId}" />
 									　　　　　<button type="submit" name="tlFavButton">
 										<span th:text="${favIcon}"></span>
 									</button>
@@ -131,10 +133,6 @@
 				<img th:src="${tweetBox.accountimgURL}" alt="画像" id="acountimage" />
 			</div>
 
-			<div id="followimage">
-				<!--フォローする・フォロー中の画像-->
-				<img src="follow.png" alt="画像" id="followimage" />
-			</div>
 
 			<div id="AccountName">
 				<h2><span th:text="${tweetBox.accountName}">
@@ -178,6 +176,7 @@
 				<div class="button">
 					<form method="post" th:action="@{/rtButton}">
 						<!-- りついぼたん押したときの処理 -->
+						<input name="tweetId" type="hidden" th:value="${tweetId}" />
 						　　　　　<button type="submit" name="rtButton">
 							<span th:text="${rtIcon}"></span>
 						</button>
@@ -192,6 +191,7 @@
 				<div class="button">
 					<form method="post" th:action="@{/favButton}">
 						<!-- ふぁぼぼたん押したときの処理 -->
+						<input name="tweetId" type="hidden" th:value="${tweetId}" />
 						　　　　　<button type="submit" name="favButton">
 							<span th:text="${favIcon}"></span>
 						</button>

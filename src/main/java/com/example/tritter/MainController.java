@@ -92,13 +92,13 @@ public class MainController {
      * リツイート数とふぁぼ数を任意の値に変更する。
      * 
      * フォームに入力された任意の値をリツイート数・ふぁぼ数に反映させる。
-     * 入力された値をリツイート数とふぁぼ数の変数に代入し返却する。
+     * 入力された値をDB上のリツイート数とふぁぼ数に上書きしその値を取得する。
      * 負の値が入力された場合ポップアップ表示
      * 最大値を超える数値が入力された場合ポップアップ表示
      * 
      * @param form form.rt form.fav共に 0を許容する。負の値は許容しない。最大値9999999
      * @param attr モデル
-     * @return リツイート数とふぁぼ数を返却
+     * @return リツイート数とふぁぼ数をDB上に上書きしその値を返却
      */
     @PostMapping("/rtFavInput")
     public String rtFavInput(RtFavInputForm form,RedirectAttributes attr) {// りついふぁぼ変更処理
@@ -129,8 +129,16 @@ public class MainController {
      * @return ふぁぼボタンの数値と表示アイコンを変更し返却
      */
     @PostMapping("/favButton")
-    public String favButton(RedirectAttributes attr) {// ふぁぼボタンを押したときの処理
-        Fav+= 1;// ふぁぼ＋１
+    public String favButton(RtFavInputForm form,RedirectAttributes attr) {// ふぁぼボタンを押したときの処理
+        
+        jdbc.update("UPDATE Tweet SET Fav = Fav+1 WHERE tweetID = ?",form.getTweetId());
+        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id");
+        List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId());
+        attr.addFlashAttribute("tweets",tweets);
+        attr.addFlashAttribute("tweet",tweet);
+        attr.addFlashAttribute("tweetId",form.getTweetId());
+        attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("Fav"));
+        attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("Rt"));
         notificationCount+=1;
         defaultFavIcon = changeFavIcon;// 表示変更
         favButtonbool=true;
@@ -148,8 +156,15 @@ public class MainController {
      * @return りついボタンの数値と表示アイコンを変更し返却
      */
     @PostMapping("/rtButton")
-    public String rtButton(RedirectAttributes attr) {// りついボタンを押したときの処理
-        Rt+=1;//りつい+1
+    public String rtButton(RtFavInputForm form,RedirectAttributes attr) {// りついボタンを押したときの処理
+        jdbc.update("UPDATE Tweet SET Rt = Rt+1 WHERE tweetID = ?",form.getTweetId());
+        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id");
+        List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId());
+        attr.addFlashAttribute("tweets",tweets);
+        attr.addFlashAttribute("tweet",tweet);
+        attr.addFlashAttribute("tweetId",form.getTweetId());
+        attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("Fav"));
+        attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("Rt"));
         notificationCount+=1;
         defaultRtIcon = changeRtIcon;// 表示変更
         rtButtonbool=true;
@@ -246,19 +261,14 @@ public class MainController {
 //       }
 //       
 //       
-       
+       notificationCount = 0;
        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id");
-       
-       attr.addFlashAttribute("tweets",tweets);
-       
        List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId);
+       attr.addFlashAttribute("tweets",tweets);
        attr.addFlashAttribute("tweet",tweet);
        attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Fav"));
        attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Rt"));
        attr.addFlashAttribute("tweetId",tweetId);
-
-       System.out.println(jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Fav"));
-
        return "redirect:/top";
    }
    

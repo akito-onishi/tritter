@@ -93,7 +93,13 @@ $(function(){
         function timer(){
             countTimer = setInterval(function(){
                 var countNext = countFav + countRt;
-                
+                if(countNext%10==0){
+                	$(function(){
+                		  $(".Message:not(:animated)").fadeIn("slow",function(){
+                		    $(this).delay(800).fadeOut("slow");
+                		  });
+                		});
+                }
                 self.text(countNext);
  
                 if(countNext == countMax){
@@ -108,13 +114,14 @@ $(function(){
 </script>
 
 
-
-
-
 </head>
 
 <body>
 
+<div class="Message">
+
+<span th:text="${rep}"></span>
+</div>
 
 	<div id="Site-Box">
 		<!--ページ全体の定義-->
@@ -141,7 +148,7 @@ $(function(){
 					
 						<div class="TLacountImage">
 							<!--TLアイコン表示-->
-							<img th:src="${tweet.accountimgURL}" alt="画像" id="TLacountimage" />
+							<img th:src="${tweet.accountimgURL}" alt="画像"  class = "img-responsive img-circle"/>
 
 						</div>
 
@@ -220,9 +227,9 @@ $(function(){
 		<div class="Tweet">
 			<!--ツイートのBox-->
             <div th:each="tweetBox : ${tweet}">
-			<div id="acountimage">
+			<div class="acountimage">
 				<!--アイコン表示-->
-				<img th:src="${tweetBox.accountimgURL}" alt="画像" id="acountimage" />
+				<img th:src="${tweetBox.accountimgURL}" alt="画像" class = "img-responsive img-circle2" />
 			</div>
 
 
@@ -320,6 +327,9 @@ $(function(){
 		</div>
        
 	</div>
-
+<script
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
 </body>
 </html>

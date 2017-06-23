@@ -3,6 +3,17 @@
     width :1440px;
     margin : 5px auto
 }
+.Message{
+	max-height: 20px;
+	margin:0 auto;
+    text-align: center;
+}
+.RepImg{
+    max-height: 20px;
+    max-width:20px;
+     height: auto;
+     width: auto;
+}
 .Title{
     background-color:#cc66cc;
 }

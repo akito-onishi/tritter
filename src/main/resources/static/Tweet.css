@@ -1,9 +1,11 @@
 
 
-#acountimage{
-  float:left;
-  width:100px;
-  height:100px;
+
+.img-circle2{
+	float:left;
+    width:100px;
+    height:100px;
+    border-radius : 50%;
 }
 
 #AccountName{
@@ -33,6 +35,8 @@
      text-align: center;
 
 }
+
+
 
 
 #RT{

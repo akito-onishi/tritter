@@ -15,12 +15,12 @@
      width: auto;
 }
 .Title{
-    background-color:#cc66cc;
+    background-color:#80ffff;
 }
 .TimeLine{
     float: left;
     width:700px; 
-    background-color:#FFFF99;
+    background-color:#FFFFFF;
     overflow: scroll;/*スクロールバー*/
     height:900px;/*この値を超えたらスクロール*/
 }
@@ -33,13 +33,13 @@
 .Tweet{
    float: right;
     width:700px; 
-    background-color:#66ff33;
+    background-color:#ffffff;
 }
 
 
 .ButtonArea{
     float: right;
     width:700px; 
-    background-color:#33ccff;
+    background-color:#80ffff;
 }
 

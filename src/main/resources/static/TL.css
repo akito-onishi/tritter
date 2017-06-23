@@ -1,12 +1,12 @@
 .TLtweet a{
 	display:block;
     border : 1px solid #000000;
-    background-color:#f9d986;
+    background-color:#ffffff;
 
 }
 
  /* 以下マウスを載せたときのスタイル */
-.TLtweet a:hover { background-color: #247BA0;
+.TLtweet a:hover { background-color: #80ffff;
  color:#222222; }
 
 .TLacountImage{

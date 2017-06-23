@@ -145,7 +145,7 @@ $(function(){
 				<div class="TLtweet">
                    <div th:id ="${tweet.tweetId}">
 					<!--タイムラインの一つのツイート-->
-					
+					<a herf ="">
 						<div class="TLacountImage">
 							<!--TLアイコン表示-->
 							<img th:src="${tweet.accountimgURL}" alt="画像"  class = "img-responsive img-circle"/>
@@ -213,8 +213,9 @@ $(function(){
 							<span th:text="${tweet.Fav}"></span>
                             
 						</div>
-					
+					</a>
 				</div>
+				
 			</div>
 			</div>
 		</div>
@@ -242,6 +243,7 @@ $(function(){
 
 			<div class="TweetContents">
 				<!--ツイート内容表示-->
+				<p></p>
                 <span th:text="${tweetBox.tweetContents}"></span>
 			</div>
             <p></p>

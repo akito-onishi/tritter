@@ -39,7 +39,10 @@ public class MainController {
     String accountimgURL = null;
     String tweetimgURL = null;
     String tweetTime;
-    String count = "count";
+    String favCount = "favcount";
+    String rtCount = "rtcount";
+    String rtfavCount = "rtfavcount";
+    String noCount = "nocount";
     
     
     
@@ -57,12 +60,15 @@ public class MainController {
     }
     
     /**
-     * tritterの初期ページ
+     * tritterの初期ページ/ツイッターの情報を取得する
      * 
-     * tritterの初期ページの設定を行う。
+     *  取得した１つのtweet情報（アカウント名/スクリーンネーム/アカウント画像/ツイート内容/fav rt数）を各変数に代入し返却する
+     * ツイート画像がない場合はtweetimgURLをnullとする。
+     * タイムラインが読み込めなかった場合、{@link TwitterException}を返却する。
+     * 新しいツイートがある場合はDBにツイート情報を追加
      * 
      * @param model モデル
-     * @return 初期設定情報を返却する。
+     * @return タイムライン情報を返却する。
      */
     @GetMapping("/top") // 最初の状態
     public String top(Model model) {
@@ -100,13 +106,12 @@ public class MainController {
         } catch (TwitterException te) {
             te.printStackTrace();
             System.out.println("Failed to get timeline: " + te.getMessage());
-            System.exit(-1);
+//            System.exit(-1);
         }
         
-        }else if (apiLimit <10){
+        }else if (apiLimit ==7){
             
-            apiLimit +=1;
-//            jdbc.update("DELETE FROM TWEET");
+            apiLimit =1;
             
             try {
                 Twitter twitter = new TwitterFactory().getInstance();
@@ -123,8 +128,7 @@ public class MainController {
                         tweetimgURLList.add(m.getMediaURL());
                         
                     }
-                    System.out.println(jdbc.queryForList("SELECT * FROM TWEET").size());
-                    //for(int j=0; j<statuses.size();j++){
+
                     for(int j=0;j<jdbc.queryForList("SELECT * FROM TWEET").size();j++){
 
                      
@@ -149,10 +153,14 @@ public class MainController {
             } catch (TwitterException te) {
                 te.printStackTrace();
                 System.out.println("Failed to get timeline: " + te.getMessage());
-                System.exit(-1);
+//                System.exit(-1);
             }
             
+        }else{
+            apiLimit +=1;
         }
+        
+        System.out.println(apiLimit);
         
         model.addAttribute("notificationCount",notificationCount);
         return "top";
@@ -247,7 +255,7 @@ public class MainController {
     /**
      * 入力値を初期化する
      * 
-     * ユーザーが変更したリツイートやファボ数を0で返却し初期値に戻す。
+     * ユーザーが変更したリツイートやファボ数を0でアップデートする。
      * 
      * @param attr モデル
      * @return 初期化したファボ数・リツイート数の変数を返却する。
@@ -267,42 +275,23 @@ public class MainController {
         attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("Rt"));
         attr.addFlashAttribute("favIcon",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("favIcon"));
         attr.addFlashAttribute("rtIcon",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",form.getTweetId()).get(0).get("rtIcon"));
+        attr.addFlashAttribute("favcount", noCount);
+        attr.addFlashAttribute("rtcount", noCount);
         notificationCount = 0;
         return "redirect:/top";
     }
     
-/**
- * ツイッターの情報を取得する
- * 
- * 取得した１つのtweet情報（アカウント名/スクリーンネーム/アカウント画像/ツイート内容/fav rt数）を各変数に代入し返却する
- * ツイート画像がない場合はtweetimgURLをnullとする。
- * タイムラインが読み込めなかった場合、{@link TwitterException}を返却する。
- * @param attr モデル
- * @return tweet情報が代入された各変数を返却する
- */
 
 /**
  * ユーザが選択したツイートのIDと一致するIDを持つツイート情報を表示する。
  * 
  * @param attr モデル
  * @param tweetId ツイートID String型
- * @return 各変数にツイート情報を与えて
+ * @return 各変数にツイート情報を与えて返却する。
  */
    @PostMapping("/setTweet")
    public String setTweet(RedirectAttributes attr,String tweetId){
 
-//     
-//       if(apiLimit == 0){
-//           apiLimit+=1;
-//           getTweet(attr);
-//       }else if(apiLimit == 7){
-//           getTweet(attr);
-//           apiLimit =0;
-//       }else{
-//           apiLimit++;
-//       }
-//       
-//       
        notificationCount = 0;
        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id DESC");
        List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId);
@@ -324,7 +313,9 @@ public class MainController {
        attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Fav"));
        attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Rt"));
        attr.addFlashAttribute("tweetId",tweetId);
-       attr.addFlashAttribute("count", count);
+       attr.addFlashAttribute("favcount", favCount);
+       attr.addFlashAttribute("rtcount", rtCount);
+       attr.addFlashAttribute("rtfavcount", rtfavCount);
        
        return "redirect:/top";
    }

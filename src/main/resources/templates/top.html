@@ -20,9 +20,11 @@
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 <script>
+var countFav =0;
+var countRt =0;
 $(function(){
-    var countElm = $('.count'),
-    countSpeed = 100;
+    var countElm = $('.favcount'),
+    countSpeed = 150 + Math.floor( Math.random() * 150);
  
     countElm.each(function(){
         var self = $(this),
@@ -33,6 +35,65 @@ $(function(){
         function timer(){
             countTimer = setInterval(function(){
                 var countNext = thisCount++;
+                if(countNext%9==0 || countNext%19 ==0){
+                    thisCount +=5;
+                }
+                countFav = countNext;
+                self.text(countNext);
+ 
+                if(countNext == countMax){
+                    clearInterval(countTimer);
+                }
+            },countSpeed);
+        }
+        timer();
+    });
+ 
+});
+
+$(function(){
+    var countElm = $('.rtcount'),
+    countSpeed = 150 + Math.floor( Math.random() * 150);
+ 
+    countElm.each(function(){
+        var self = $(this),
+        countMax = self.attr('data-num'),
+        thisCount = self.text(),
+        countTimer;
+ 
+        function timer(){
+            countTimer = setInterval(function(){
+                var countNext = thisCount++;
+                if(countNext%7==0){
+                    thisCount +=11;
+                }
+                countRt = countNext;
+                self.text(countNext);
+ 
+                if(countNext == countMax){
+                    clearInterval(countTimer);
+                }
+            },countSpeed);
+        }
+        timer();
+    });
+ 
+});
+
+$(function(){
+    var countElm = $('.rtfavcount'),
+    countSpeed = 150 + Math.floor( Math.random() * 100);
+ 
+    countElm.each(function(){
+        var self = $(this),
+        countMax = self.attr('data-num'),
+        thisCount = self.text(),
+        countTimer;
+ 
+        function timer(){
+            countTimer = setInterval(function(){
+                var countNext = countFav + countRt;
+                
                 self.text(countNext);
  
                 if(countNext == countMax){
@@ -45,6 +106,10 @@ $(function(){
  
 });
 </script>
+
+
+
+
 
 </head>
 
@@ -149,7 +214,7 @@ $(function(){
 		 <div th:each="tweetBox : ${tweet}">
         <div class= "Notification">
         <!--通知エリア-->
-            <p>ツイート　<span th:text="${tweetBox.tweetCount}"></span>　　フォロー　<span th:text="${tweetBox.friendsCount}"></span>　　フォロワー　<span th:text="${tweetBox.followersCount}"></span>　　通知　🔔 <span th:text="${notificationCount}"></span></p>
+            <p>ツイート　<span th:text="${tweetBox.tweetCount}"></span>　　フォロー　<span th:text="${tweetBox.friendsCount}"></span>　　フォロワー　<span th:text="${tweetBox.followersCount}"></span>　　通知　🔔 <span th:class="${rtfavcount}" data-num="10000"><span th:text="${notificationCount}"></span></span></p>
         </div>
         </div>
 		<div class="Tweet">
@@ -180,13 +245,13 @@ $(function(){
 
 			<div id="RT">
 				<!--RT表示-->
-				<h3><font color="#33ccff"><span th:text="${tweetBox.Rt}"></span></font></h3>
+				<h3><font color="#33ccff"><span th:class="${rtcount}" data-num="10000"><span th:text="${tweetBox.Rt}"></span></span></font></h3>
 				<span>リツイート</span>
 			</div>
 
 			<div id="Good">
 				<!--いいね表示-->
-				<span><h3><font color="#33ccff"><span th:text="${tweetBox.Fav}"></span></font></h3></span>
+				<span><h3><font color="#33ccff"><span th:class="${favcount}" data-num="10000"><span th:text="${tweetBox.Fav}"></span></span></font></h3></span>
 				<span>いいね</span>
 			</div>
 
@@ -211,7 +276,7 @@ $(function(){
 					</form>
 				</div>
 				<div class="text">
-					<span th:text="${tweetBox.Rt}"></span>
+					<span th:class="${rtcount}" data-num="10000"><span th:text="${tweetBox.Rt}"></span></span>
 				</div>
 
 
@@ -226,7 +291,7 @@ $(function(){
 					</form>
 				</div>
 
-				<span th:class="${count}" data-num="10000"><span th:text="${tweetBox.Fav}"></span></span>
+				<span th:class="${favcount}" data-num="10000"><span th:text="${tweetBox.Fav}"></span></span>
 
 			</div>
          </div>

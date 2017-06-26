@@ -309,7 +309,7 @@ public class MainController {
    @PostMapping("/Flaming")
    public String Flaming(RedirectAttributes attr,String tweetId){
 //       String repimg = "画像.png";
-       String rep = "@"+jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("ScreenName")+"このツイート面白すぎい！！！！";
+       String rep = "@"+jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("ScreenName")+"炎上中！！";
        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id DESC");
        List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId);
        attr.addFlashAttribute("tweets",tweets);

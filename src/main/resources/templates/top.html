@@ -143,8 +143,6 @@ $(function(){
 
             
 
-			<p>タイムライン情報を表示</p>
-
 			<!--th:each-->
 			<div th:each="tweet : ${tweets}">
 				<div class="col-md-12" >
@@ -315,7 +313,6 @@ $(function(){
 		<div class="ButtonArea">
 			<!--ボタン配置エリア-->
 			<h2>ButtonArea</h2>
-			<span>ボタンを配置</span>
 			<form method="post" th:action="@{/Flaming}">
 			<input name="tweetId" type="hidden" th:value="${tweetId}" />
 			     <button type="submit" class="btn btn-danger">炎上</button>

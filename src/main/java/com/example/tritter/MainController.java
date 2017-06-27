@@ -121,6 +121,7 @@ public class MainController {
                 
                 for(int i=0;i<statuses.size();i++){
                     MediaEntity[] mediaEntitys = statuses.get(i).getMediaEntities();
+                    tweetimgURLList.clear();//ツイート画像リストを初期化
                     if (mediaEntitys.length == 0) {//ツイートに画像がない場合 リストに空の値を追加
                         tweetimgURLList.add("");
                     }
@@ -134,7 +135,7 @@ public class MainController {
                      
                      if(jdbc.queryForList("SELECT * FROM TWEET WHERE id = ?",j).get(0).get("tweetID").equals(String.valueOf(statuses.get(i).getId()))){
                      break;
-                     }else if (j==jdbc.queryForList("SELECT * FROM TWEET").size()-1){
+                     }else if (j==jdbc.queryForList("SELECT * FROM TWEET ORDER BY id DESC").size()-1){
                          jdbc.update("INSERT INTO TWEET VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                          j+1,statuses.get(i).getUser().getProfileImageURL(),statuses.get(i).getUser().getName(),
                          statuses.get(i).getUser().getScreenName(),statuses.get(i).getText(),tweetimgURLList.get(i),
@@ -163,7 +164,6 @@ public class MainController {
             model.addAttribute("tweets",tweets);
         }
         
-        System.out.println(apiLimit);
         
         model.addAttribute("notificationCount",notificationCount);
         return "top";

@@ -98,22 +98,27 @@ public class MainController {
                                 statuses.get(i).getUser().getFollowersCount(),statuses.get(i).getUser().getFriendsCount(),
                                 String.valueOf(statuses.get(i).getId()),String.valueOf(statuses.get(i).getCreatedAt()),defaultFavIcon,defaultRtIcon);
             }
-            
+            notificationCount = 0;
             List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id DESC");
-            
+            List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",String.valueOf(statuses.get(0).getId()));
             model.addAttribute("tweets",tweets);
+            model.addAttribute("tweet",tweet);
+            model.addAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",String.valueOf(statuses.get(0).getId())).get(0).get("Fav"));
+            model.addAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",String.valueOf(statuses.get(0).getId())).get(0).get("Rt"));
+            model.addAttribute("tweetId",String.valueOf(statuses.get(0).getId()));
 
         } catch (TwitterException te) {
             te.printStackTrace();
             System.out.println("Failed to get timeline: " + te.getMessage());
 //            System.exit(-1);
         }
-        
+
         }else if (apiLimit ==7){
             
             apiLimit =1;
             
             try {
+                
                 Twitter twitter = new TwitterFactory().getInstance();
                 List<Status> statuses = twitter.getHomeTimeline();//TLのリスト
                 
@@ -125,6 +130,7 @@ public class MainController {
                     if (mediaEntitys.length == 0) {//ツイートに画像がない場合 リストに空の値を追加
                         tweetimgURLList.add("");
                     }
+                    System.out.println(mediaEntitys.length);
                     for(MediaEntity m:mediaEntitys){//ツイートに画像がある場合 画像のURLをリストに追加
                         tweetimgURLList.add(m.getMediaURL());
                         
@@ -142,7 +148,11 @@ public class MainController {
                          statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount(),statuses.get(i).getUser().getStatusesCount(),
                          statuses.get(i).getUser().getFollowersCount(),statuses.get(i).getUser().getFriendsCount(),
                          String.valueOf(statuses.get(i).getId()),String.valueOf(statuses.get(i).getCreatedAt()),defaultFavIcon,defaultRtIcon);
-                         break;
+//                        if(j==statuses.size()-1){
+//                            break;
+//                        }else{
+//                            j=0;
+//                        }
                      }
                     }
                 }
@@ -323,6 +333,35 @@ public class MainController {
        attr.addFlashAttribute("rep", rep);
 //       attr.addFlashAttribute("repimg", repimg);
        
+       
+       return "redirect:/top";
+   }
+   
+   @PostMapping("/tweet")
+   public String Tweet(RedirectAttributes attr,String sendtweet){
+       
+       try{
+       Twitter twitter = new TwitterFactory().getInstance();
+
+       //つぶやきの実行
+       twitter.updateStatus(sendtweet+"by tritter");
+
+       }catch (TwitterException te) {
+           te.printStackTrace();
+           System.out.println("Failed to get timeline: " + te.getMessage());
+//           System.exit(-1);
+       }
+       
+       List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id DESC");
+//       List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId);
+       attr.addFlashAttribute("tweets",tweets);
+//       attr.addFlashAttribute("tweet",tweet);
+//       attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Fav"));
+//       attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Rt"));
+//       attr.addFlashAttribute("tweetId",tweetId);
+       attr.addFlashAttribute("favcount", favCount);
+       attr.addFlashAttribute("rtcount", rtCount);
+       attr.addFlashAttribute("rtfavcount", rtfavCount);
        
        return "redirect:/top";
    }

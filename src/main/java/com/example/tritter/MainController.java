@@ -47,7 +47,7 @@ public class MainController {
     
     
     
-//    List<Tweets> tweets = new ArrayList<>();//ツイートのリスト
+
     List<String> tweetimgURLList = new ArrayList<String>();
     @Autowired
     private JdbcTemplate jdbc;
@@ -110,7 +110,7 @@ public class MainController {
         } catch (TwitterException te) {
             te.printStackTrace();
             System.out.println("Failed to get timeline: " + te.getMessage());
-//            System.exit(-1);
+
         }
 
         }else if (apiLimit ==7){
@@ -148,11 +148,6 @@ public class MainController {
                          statuses.get(i).getFavoriteCount(),statuses.get(i).getRetweetCount(),statuses.get(i).getUser().getStatusesCount(),
                          statuses.get(i).getUser().getFollowersCount(),statuses.get(i).getUser().getFriendsCount(),
                          String.valueOf(statuses.get(i).getId()),String.valueOf(statuses.get(i).getCreatedAt()),defaultFavIcon,defaultRtIcon);
-//                        if(j==statuses.size()-1){
-//                            break;
-//                        }else{
-//                            j=0;
-//                        }
                      }
                     }
                 }
@@ -164,7 +159,7 @@ public class MainController {
             } catch (TwitterException te) {
                 te.printStackTrace();
                 System.out.println("Failed to get timeline: " + te.getMessage());
-//                System.exit(-1);
+
             }
             
         }else{
@@ -318,7 +313,6 @@ public class MainController {
  
    @PostMapping("/Flaming")
    public String Flaming(RedirectAttributes attr,String tweetId){
-//       String repimg = "画像.png";
        String rep = "@"+jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("ScreenName")+"炎上中！！";
        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id DESC");
        List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId);
@@ -331,7 +325,6 @@ public class MainController {
        attr.addFlashAttribute("rtcount", rtCount);
        attr.addFlashAttribute("rtfavcount", rtfavCount);
        attr.addFlashAttribute("rep", rep);
-//       attr.addFlashAttribute("repimg", repimg);
        
        
        return "redirect:/top";
@@ -349,16 +342,10 @@ public class MainController {
        }catch (TwitterException te) {
            te.printStackTrace();
            System.out.println("Failed to get timeline: " + te.getMessage());
-//           System.exit(-1);
        }
        
        List<Map<String, Object>> tweets = jdbc.queryForList("SELECT * FROM Tweet ORDER BY id DESC");
-//       List<Map<String, Object>> tweet = jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId);
        attr.addFlashAttribute("tweets",tweets);
-//       attr.addFlashAttribute("tweet",tweet);
-//       attr.addFlashAttribute("Fav",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Fav"));
-//       attr.addFlashAttribute("Rt",jdbc.queryForList("SELECT * FROM Tweet WHERE tweetID = ?",tweetId).get(0).get("Rt"));
-//       attr.addFlashAttribute("tweetId",tweetId);
        attr.addFlashAttribute("favcount", favCount);
        attr.addFlashAttribute("rtcount", rtCount);
        attr.addFlashAttribute("rtfavcount", rtfavCount);
